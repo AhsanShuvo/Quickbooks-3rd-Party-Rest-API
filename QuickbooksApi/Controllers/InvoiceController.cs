@@ -16,7 +16,6 @@ namespace QuickbooksApi.Controllers
     public class InvoiceController : Controller
     {
         private ApiDataProvider _provider = new ApiDataProvider();
-        private JsonToModelBuilder _builder = new JsonToModelBuilder();
         private InvoiceRepository _repository = new InvoiceRepository();
 
         public ActionResult Index()
