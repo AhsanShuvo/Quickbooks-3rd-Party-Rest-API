@@ -1,0 +1,19 @@
+﻿<div class="col-md-8 ml-5 align-content-center">
+    <h2>DeletePayment</h2>
+    @using(Html.BeginForm("DeletePayment", "Payment", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Id")
+            </div>
+            <div class="col-md-5">
+               <input type="text" name="Id" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <input type="button" value="Submit" />
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,43 @@
+﻿@model QuickbooksApi.Models.CompanyInfo
+
+<div class="col-md-8 ml-5 align-content-center">
+    <h2>CompanyDetails</h2>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("Id")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.Id)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("Company Name")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.CompanyName)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("CompanyStartDate")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.CompanyStartDate)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("SyncToken")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.SyncToken)
+        </div>
+    </div>
+    <div clsas="row">
+        <div class="col-md-3">
+            <input type="button" value="Back to Home" onclick="location.href='@Url.Action("Index", "Company")'"/>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,45 @@
+﻿@model QuickbooksApi.Models.AccountInfo
+
+<div class="col-md-8 ml-5 align-content-center">
+    @using (Html.BeginForm("CreateAccount", "Account", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Name")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.Name)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("AccountType")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.AccountType)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Classification")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.Classification)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("CurrentBalance")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.CurrentBalance)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <input type="submit" value="Submit" />
+            </div>
+        </div>
+    }
+
+</div>

@@ -1,0 +1,60 @@
+﻿@model QuickbooksApi.Models.EmployeeInfo
+
+
+<div class="col-md-8 ml-5 align-content-center">
+    <h2>Employee Details</h2>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("Id")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.Id)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("DisplayName")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.DisplayName)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("FamilyName")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.FamilyName)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("Given Name")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.GivenName)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("Active")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.Active)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("SyncToken")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.SyncToken)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <input type="button" value="Back to Home" onclick="location.href='@Url.Action("Index", "EmployeeInfo")'" />
+        </div>
+    </div>
+</div>
+

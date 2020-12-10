@@ -1,0 +1,128 @@
+DECLARE @dbname NVARCHAR(40)
+SET @dbname = 'Quickbooks'
+
+IF (NOT EXISTS(SELECT NAME FROM MASTER.dbo.sysdatabases WHERE ('[' + NAME + ']' = @dbname OR NAME = @dbname)))
+	BEGIN
+		CREATE DATABASE Quickbooks
+	END
+GO
+
+Use Quickbooks
+
+DECLARE @tblName NVARCHAR(50)
+SET @tblName = 'AccountInfo'
+
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblName)
+	BEGIN
+		CREATE TABLE AccountInfo(
+			Id NVARCHAR(20) PRIMARY KEY,
+			[Name] NVARCHAR(200),
+			AccountType NVARCHAR(MAX),
+			[Classification] NVARCHAR(100),
+			CurrentBalance FLOAT,
+			SyncToken NVARCHAR(50)
+		)
+	END
+
+SET @tblName = 'CustomerInfo'
+
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblName)
+	BEGIN
+		CREATE TABLE CustomerInfo(
+			Id NVARCHAR(20) PRIMARY KEY,
+			DisplayName NVARCHAR(200),
+			CompanyName NVARCHAR(200),
+			Balance FLOAT,
+			SyncToken NVARCHAR(20),
+			Active INT	
+		)
+	END
+
+SET @tblName = 'VendorInfo'
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblName)
+	BEGIN
+		CREATE TABLE VendorInfo(
+			Id NVARCHAR(20) PRIMARY KEY,
+			DisplayName NVARCHAR(200),
+			CompanyName NVARCHAR(200),
+			Balance FLOAT,
+			SyncToken NVARCHAR(20),
+			Active INT
+		)
+	END
+
+SET @tblName ='EmployeeInfo'
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblName)
+	BEGIN
+		CREATE TABLE EmployeeInfo(
+			Id NVARCHAR(20) PRIMARY KEY,
+			GivenName NVARCHAR(50),
+			FamilyName NVARCHAR(50),
+			DisplayName NVARCHAR(200),
+			Active INT,
+			SyncToken NVARCHAR(20)
+		)
+	END
+
+SET @tblName = 'CompanyInfo'
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblName)
+	BEGIN
+		CREATE TABlE CompanyInfo(
+			Id NVARCHAR(20) PRIMARY KEY,
+			CompanyName NVARCHAR(200),
+			CompanyStartDate NVARCHAR(200),
+			SyncToken NVARCHAR(20)
+		)
+	END
+
+SET @tblName = 'ItemInfo'
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblName)
+	BEGIN
+		CREATE TABLE ItemInfo(
+			Id NVARCHAR(20) PRIMARY KEY,
+			[Name] NVARCHAR(200),
+			[Type] NVARCHAR(100),
+			UnitPrice FLOAT,
+			PurchaseCost FLOAT,
+			QtyOnHand FLOAT,
+			Active INT,
+			SyncToken NVARCHAR(20)
+		)
+	END
+
+SET @tblName = 'CategoryInfo'
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblName)
+	BEGIN
+		CREATE TABLE CategoryInfo(
+			Id NVARCHAR(20) PRIMARY KEY,
+			[Name] NVARCHAR(100),
+			[Type] NVARCHAR(100),
+			Active INT,
+			SyncToken NVARCHAR(20)
+		)
+	END
+
+SET @tblName = 'PaymentInfo'
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblName)
+	BEGIN
+		CREATE TABLE PaymentInfo(
+			Id NVARCHAR(20) PRIMARY KEY,
+			TotalAmt FLOAT,
+			SyncToken NVARCHAR(20),
+			CustomerRef NVARCHAR(20)
+		)
+	END
+
+SET @tblName = 'BillInfo'
+IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblName)
+	BEGIN
+		CREATE TABLE BillInfo(
+			Id NVARCHAR(20) PRIMARY KEY,
+			SyncToken NVARCHAR(20),
+			TxnDate NVARCHAR(50),
+			TotalAmt FLOAT,
+			DueDate NVARCHAR(50),
+			Balance FLOAT,
+			VendorRef NVARCHAR(30)
+		)
+	END

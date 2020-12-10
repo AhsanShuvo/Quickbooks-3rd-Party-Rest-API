@@ -1,0 +1,51 @@
+﻿@model QuickbooksApi.Models.CustomerInfo
+
+<div class="col-md-8 ml-5 align-content-center">
+    @using (Html.BeginForm("CreateCustomer", "Customer", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Display Name")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.DisplayName)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Company Name")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.CompanyName)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Balance")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.Balance)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Active")
+            </div>
+            <div class="col-md-5">
+                @Html.DropDownListFor(m => Model.Active, new SelectList(Enum.GetValues(typeof(ActiveStatus))), "Select Status")
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("SyncToken")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.SyncToken)
+            </div>
+        </div>
+        <div class="row">
+            <input type="submit" value="Submit" />
+        </div>
+    }
+</div>
+

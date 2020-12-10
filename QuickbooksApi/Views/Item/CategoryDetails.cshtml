@@ -1,0 +1,51 @@
+﻿@model QuickbooksApi.Models.CategoryInfo
+
+<div class="col-md-8 ml-5 align-content-center">
+    <h2 class="align-content-center">CategoryDetails</h2>
+
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("Id")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.Id)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("Name")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.Name)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("Type")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.Type)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("Active")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.Active)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Label("SyncToken")
+        </div>
+        <div class="col-md-5">
+            @Html.DisplayFor(m => Model.SyncToken)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <input type="button" value="Back to Home" onclick="location.href='@Url.Action("Index", "Item")'" />
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30517.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickbooksApi", "QuickbooksApi\QuickbooksApi.csproj", "{6432AFC5-03E5-4CD1-BDB7-74FFFFCB0787}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6432AFC5-03E5-4CD1-BDB7-74FFFFCB0787}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6432AFC5-03E5-4CD1-BDB7-74FFFFCB0787}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6432AFC5-03E5-4CD1-BDB7-74FFFFCB0787}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6432AFC5-03E5-4CD1-BDB7-74FFFFCB0787}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6D672484-6A17-49BD-B2C9-1C475ECBB563}
+	EndGlobalSection
+EndGlobal

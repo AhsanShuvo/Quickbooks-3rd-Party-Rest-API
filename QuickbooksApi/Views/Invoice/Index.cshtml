@@ -1,0 +1,24 @@
+﻿
+<div class="col-md-8 ml-5 align-content-center">
+    <h2>Index</h2>
+    <div class="row">
+        <input type="button" value="Create" onclick="location.href='@Url.Action("CreateInvoice", "Invoice")'" />
+    </div>
+    <div class="row mt-2">
+        <input type="button" value="Read" onclick="location.href='@Url.Action("InvoiceDetails", "Invoice")'" />
+    </div>
+    <div class="row mt-2">
+        <input type="button" value="Delete" onclick="location.href='@Url.Action("DeleteInvoice", "Invoice")'" />
+    </div>
+    <div class="row mt-2">
+        <input type="button" value="download PDF" onclick="location.href='@Url.Action("DownloadInvoice", "Invoice")'" />
+    </div>
+    <div class="row mt-2">
+        <input type="button" value="Update" onclick="location.href='@Url.Action("UpdateInvoice", "Invoice")'" />
+    </div>
+    <div class="row mt-2">
+        <input type="button" value="Back to Home" onclick="location.href='@Url.Action("Index", "Home")'" />
+    </div>
+</div>
+
+

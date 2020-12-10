@@ -1,0 +1,40 @@
+﻿@model QuickbooksApi.Models.PaymentInfo
+
+<div class="col-md-8 ml-5 align-content-center">
+    <h2>CreatePayment</h2>
+    @using (Html.BeginForm("CreatePayment", "Payment", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("TotalAmount")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.TotalAmt)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Customer Id")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.CustomerRef.value)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Customer  Name")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.CustomerRef.name)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <input type="submit" value="Submit" />
+            </div>
+        </div>
+    }
+
+</div>
+
+

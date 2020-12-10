@@ -1,0 +1,24 @@
+﻿<div class="col-md-8 ml-5 align-content-center">
+    <h2 class="align-content-center">Payment</h2>
+    <div class="row">
+        <input type="button" value="Create" onclick="location.href='@Url.Action("CreatePayment", "Payment")'"/>
+    </div>
+    <div class="row mt-2">
+        <input type="button" value="Delete" onclick="location.href='@Url.Action("DeletePayment", "Payment")'" />
+    </div>
+    <div class="row mt-2">
+        <input type="button" value="Void" onclick="location.href='@Url.Action("VoidPayment", "Payment")'" />
+    </div>
+    <div class="row mt-2">
+        <input type="button" value="Read" onclick="location.href='@Url.Action("PaymentDetails", "Payment")'" />
+    </div>
+    <div class="row mt-2">
+        <input type="button" value="Download" onclick="location.href='@Url.Action("DownloadPayment", "Payment")'" />
+    </div>
+    <div class="row mt-2">
+        <input type="button" value="Email Payment" onclick="location.href='@Url.Action("EmailPayment", "Payment")'" />
+    </div>
+    <div class="row mt-3">
+        <input type="button" value="Back to Home" onclick="location.href='@Url.Action("Index", "Home")'" />
+    </div>
+</div>

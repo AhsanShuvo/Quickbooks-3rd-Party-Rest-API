@@ -1,0 +1,38 @@
+﻿@model QuickbooksApi.Models.EmployeeInfo
+
+<div class="col-md-8 ml-5 align-content-center">
+    <h2>CreateEmployee</h2>
+    @using (Html.BeginForm("CreateEmployee", "Employee", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Given Name")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.GivenName)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("DisplayName")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.DisplayName)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Active")
+            </div>
+            <div class="col-md-5">
+                @Html.DropDownListFor(m => Model.Active, new SelectList(Enum.GetValues(typeof(ActiveStatus))), "Select Status")
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <input type="submit" value="Submit" />
+            </div>
+        </div>
+    }
+</div>
+

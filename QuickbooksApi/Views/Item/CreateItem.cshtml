@@ -1,0 +1,52 @@
+﻿@model QuickbooksApi.Models.ItemInfo
+
+<div class="col-md-8 ml-5 align-content-center">
+    @using (Html.BeginForm("CreateItem", "Item", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Name")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.Name)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Type")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.Type)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("ActiveStatus")
+            </div>
+            <div class="col-md-5">
+                @Html.DropDownListFor(m => Model.Active, new SelectList(Enum.GetValues(typeof(ActiveStatus))), "Select Status")
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Unit Price")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.UnitPrice)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Quantity")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => Model.QtyOnHand)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <input type="submit" value="Submit" />
+            </div>
+        </div>
+    }
+</div>

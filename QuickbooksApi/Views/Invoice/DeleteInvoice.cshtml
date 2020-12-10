@@ -1,0 +1,20 @@
+﻿<div class="col-md-8 ml-5 align-content-center">
+    <h2> Delete Invoice</h2>
+    @using (Html.BeginForm("DeleteInvoice", "Invoice", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Invoice Id")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBox("Id")
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <input type="submit" value="Submit" />
+            </div>
+        </div>
+    }
+</div>
+
