@@ -10,49 +10,79 @@ namespace QuickbooksApi.ApiService
         public async Task<string> Get(string uri, string token)
         {
             string responseAsString = string.Empty;
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.DefaultRequestHeaders.Add("ContentType", "application/json");
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-            var response = await client.GetAsync(uri);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                responseAsString = await response.Content.ReadAsStringAsync();
+                using(HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    client.DefaultRequestHeaders.Add("ContentType", "application/json");
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                    var response = await client.GetAsync(uri);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        responseAsString = await response.Content.ReadAsStringAsync();
+                    }
+                }
             }
+            catch
+            {
+
+            }
+            
             return responseAsString;
         }
 
         public async Task<string> Post(string uri, StringContent requestBody, string token)
         {
             string resposeAsString = string.Empty;
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-            client.DefaultRequestHeaders.Add("ContentType", "application/json");
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-            HttpResponseMessage response = await client.PostAsync(uri, requestBody);
-            if (response.IsSuccessStatusCode)
+
+            try
             {
-                resposeAsString = await response.Content.ReadAsStringAsync();
-                
+                using(HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    client.DefaultRequestHeaders.Add("ContentType", "application/json");
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                    HttpResponseMessage response = await client.PostAsync(uri, requestBody);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        resposeAsString = await response.Content.ReadAsStringAsync();
+
+                    }
+                }
             }
+            catch
+            {
+
+            }
+            
             return resposeAsString;
         }
 
         public async Task GetPDF(string uri, string token)
         {
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("ContentType", "application/octet-stream");
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-            byte[] data = await client.GetByteArrayAsync(uri);
-            var gen = new Random();
-            var number = gen.Next();
-            var fileName = "D:\\MypdfFile"+number +".pdf";
-            if (!File.Exists(fileName))
+            try
             {
-                using (FileStream stream = File.Create(fileName))
+                using (HttpClient client = new HttpClient())
                 {
-                    stream.Write(data, 0, data.Length);
+                    client.DefaultRequestHeaders.Add("ContentType", "application/octet-stream");
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                    byte[] data = await client.GetByteArrayAsync(uri);
+                    var gen = new Random();
+                    var number = gen.Next();
+                    var fileName = "D:\\MypdfFile" + number + ".pdf";
+                    if (!File.Exists(fileName))
+                    {
+                        using (FileStream stream = File.Create(fileName))
+                        {
+                            stream.Write(data, 0, data.Length);
+                        }
+                    }
                 }
+            }
+            catch
+            {
+
             }
         }
     }
