@@ -480,6 +480,7 @@
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\VendorController.cs" />
+    <Compile Include="Controllers\WebhookController.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -553,6 +554,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Report\" />
+    <Folder Include="Views\Webhook\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
