@@ -34,7 +34,13 @@ namespace QuickbooksApi.Repository
                     cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
 
                     con.Open();
-                    cmd.ExecuteNonQuery();
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch
+                    {
+                    }
                     con.Close();
                 }
                 catch (Exception e)

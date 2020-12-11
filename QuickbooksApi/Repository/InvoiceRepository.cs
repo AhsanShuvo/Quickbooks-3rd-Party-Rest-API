@@ -29,7 +29,13 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("TxnDate", model.TxnDate);
 
                 con.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+                }
                 con.Close();
             }
         }
@@ -47,7 +53,13 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@Id", id);
 
                 con.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+                }
                 con.Close();
             }
         }

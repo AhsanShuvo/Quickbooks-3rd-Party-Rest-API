@@ -36,7 +36,13 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@QtyOnHand", model.QtyOnHand);
 
                 con.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+                }
                 con.Close();
             }
         }
@@ -65,7 +71,13 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
 
                 con.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+                }
                 con.Close();
             }
         }

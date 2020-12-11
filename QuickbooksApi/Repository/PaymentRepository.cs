@@ -32,7 +32,13 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@CustomerRef", model.CustomerRef.value);
 
                 con.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+                }
                 con.Close();
             }
         }
@@ -45,17 +51,23 @@ namespace QuickbooksApi.Repository
                 var qry = @"SELECT * FROM PaymentInfo WHERE Id = @Id";
                 SqlCommand cmd = new SqlCommand(qry, con);
                 cmd.Parameters.AddWithValue("@Id", id);
-
-                SqlDataReader rd = cmd.ExecuteReader();
-                if (rd.HasRows)
+                try
                 {
-                    while (rd.Read())
+                    SqlDataReader rd = cmd.ExecuteReader();
+                    if (rd.HasRows)
                     {
-                        payment.Id = rd.GetString(0);
-                        payment.TotalAmt = rd.GetDouble(1);
-                        payment.SyncToken = rd.GetString(2);
-                        payment.CustomerRef.value = rd.GetString(3);
+                        while (rd.Read())
+                        {
+                            payment.Id = rd.GetString(0);
+                            payment.TotalAmt = rd.GetDouble(1);
+                            payment.SyncToken = rd.GetString(2);
+                            payment.CustomerRef.value = rd.GetString(3);
+                        }
                     }
+                }
+                catch
+                {
+
                 }
             }
             return payment;

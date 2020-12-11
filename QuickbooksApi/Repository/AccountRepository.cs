@@ -32,7 +32,13 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@CurrentBalance", model.CurrentBalance);
                 cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
                 con.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+                }
                 con.Close();
             }
         }

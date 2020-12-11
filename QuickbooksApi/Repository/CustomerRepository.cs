@@ -32,7 +32,13 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@Active", model.Active);
 
                 con.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+                }
                 con.Close();
             }
         }
