@@ -7,9 +7,10 @@ namespace QuickbooksApi.Repository
 {
     public class AccountRepository
     {
+        private string connectionString = ConfigurationManager.ConnectionStrings["QuickbooksDB"].ConnectionString;
+
         public void SaveAccountInfo(AccountInfo model)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["QuickbooksDB"].ConnectionString;
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 var qry = @"IF EXISTS(SELECT * FROM AccountInfo WHERE Id = @Id)
@@ -36,10 +37,32 @@ namespace QuickbooksApi.Repository
                 {
                     cmd.ExecuteNonQuery();
                 }
-                catch
+                catch(Exception e)
                 {
+                    throw e;
                 }
                 con.Close();
+            }
+        }
+
+        public void  DeleteAccountInfo(string id)
+        {
+            using(SqlConnection con = new SqlConnection(connectionString))
+            {
+                var qry = "DELETE FROM AccountInfo Where Id = @Id";
+                SqlCommand cmd = new SqlCommand(qry, con);
+                cmd.Parameters.AddWithValue("@Id", id);
+
+                try
+                {
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+                catch(Exception e)
+                {
+                    throw e;
+                }
             }
         }
     }

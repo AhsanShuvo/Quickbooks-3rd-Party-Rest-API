@@ -5,7 +5,7 @@ namespace QuickbooksApi.Models
     public class InvoiceInfo
     {
         public string Id { get; set; }
-        public string TotalAmt { get; set; }
+        public double TotalAmt { get; set; }
         public string SyncToken { get; set; }
         public CustomerReference CustomerRef { get; set; }
         public List<LineRef> Line { get; set; }

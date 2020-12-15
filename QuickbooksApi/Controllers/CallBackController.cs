@@ -1,4 +1,6 @@
-﻿using System;
+﻿using QuickbooksApi.Models;
+using QuickbooksApi.Repository;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,7 +11,8 @@ namespace QuickbooksApi.Controllers
 {
     public class CallBackController : Controller
     {
-        // GET: CallBack
+        private UserRepository _repo = new UserRepository();
+
         public async Task<ActionResult> Index()
         {
             string code = Request.QueryString["code"] ?? "none";
@@ -49,6 +52,16 @@ namespace QuickbooksApi.Controllers
 
             var id = new ClaimsIdentity(claims, "Cookies");
             Request.GetOwinContext().Authentication.SignIn(id);
+
+            UserInfo user = new UserInfo()
+            {
+                RealmId = claims[0].Value,
+                AccessToken = claims[1].Value,
+                RefreshToken = claims[3].Value,
+                AccessTokenExpiresIn = Convert.ToDateTime(claims[2].Value),
+                RefreshTokenExpiresIn = Convert.ToDateTime(claims[4].Value)
+            };
+            _repo.SaveUserInfo(user);
         }
     }
 }

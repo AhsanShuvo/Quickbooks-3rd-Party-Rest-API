@@ -1,4 +1,5 @@
 ﻿using QuickbooksApi.Models;
+using System;
 using System.Configuration;
 using System.Data.SqlClient;
 
@@ -31,15 +32,39 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
                 cmd.Parameters.AddWithValue("@Active", model.Active);
 
-                con.Open();
+                
                 try
                 {
+                    con.Open();
                     cmd.ExecuteNonQuery();
+                    con.Close();
                 }
-                catch
+                catch(Exception e)
                 {
+                    throw e;
                 }
-                con.Close();
+            }
+        }
+
+        public void DeleteCustomer(string id)
+        {
+            using(SqlConnection con = new SqlConnection(connectionString))
+            {
+                var qry = "DELETE FROM CustomerInfo WHERE Id = @Id";
+
+                SqlCommand cmd = new SqlCommand(qry, con);
+                cmd.Parameters.AddWithValue("@Id", id);
+
+                try
+                {
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+                catch(Exception e)
+                {
+                    throw e;
+                }
             }
         }
     }

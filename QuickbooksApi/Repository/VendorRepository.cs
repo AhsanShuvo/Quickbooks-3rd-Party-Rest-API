@@ -1,4 +1,5 @@
 ﻿using QuickbooksApi.Models;
+using System;
 using System.Configuration;
 using System.Data.SqlClient;
 
@@ -31,15 +32,42 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@Balance", model.Balance);
                 cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
 
-                con.Open();
                 try
                 {
+                    con.Open();
                     cmd.ExecuteNonQuery();
+                    con.Close();
                 }
-                catch
+                catch(Exception e)
                 {
+                    throw e;
                 }
-                con.Close();
+                
+            }
+        }
+
+        public void DeleteVendor(string id)
+        {
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                var qry = @"IF EXISTS(SELECT * FROM VendorInfo WHERE Id=@Id)
+                                BEGIN
+                                    DELETE FROM VendorInfo WHERE Id=@Id
+                                END";
+
+                SqlCommand cmd = new SqlCommand(qry, con);
+                cmd.Parameters.AddWithValue("@Id", id);
+
+                try
+                {
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+                catch(Exception e)
+                {
+                    throw e;
+                }
             }
         }
     }

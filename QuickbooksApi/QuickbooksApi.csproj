@@ -485,6 +485,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserInfo.cs" />
+    <Compile Include="Repository\UserRepository.cs" />
+    <Compile Include="WebhookHandler\WebhookManager.cs" />
     <Compile Include="ModelBuilder\JsonToModelBuilder.cs" />
     <Compile Include="Models\AccountInfo.cs" />
     <Compile Include="Models\CategoryInfo.cs" />
@@ -499,6 +502,7 @@
     <Compile Include="Models\LineRef.cs" />
     <Compile Include="Models\PaymentInfo.cs" />
     <Compile Include="Models\VendorInfo.cs" />
+    <Compile Include="Models\WebhookModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\AccountRepository.cs" />
     <Compile Include="Repository\CompanyRepository.cs" />

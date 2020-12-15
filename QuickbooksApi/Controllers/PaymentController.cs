@@ -75,6 +75,7 @@ namespace QuickbooksApi.Controllers
             var principal = User as ClaimsPrincipal;
             var token = principal.FindFirst("access_token").Value;
             var deleteStatus = await _provider.Post(uri, requestBody, token);
+            _repository.DeletePayment(id);
 
             return RedirectToAction("Index");
         }

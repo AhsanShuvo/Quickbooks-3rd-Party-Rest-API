@@ -148,14 +148,11 @@ namespace QuickbooksApi.ModelBuilder
             dynamic obj = JsonConvert.DeserializeObject(modelJson);
             dynamic model = obj.Invoice;
             List<LineRef> Lines = new List<LineRef>();
-            var salesItems = model.Line;
+           var salesItems = model.Line;
             foreach(var item in salesItems)
             {
                 LineRef line = new LineRef()
                 {
-                    Description = item.Description,
-                    DetailType = item.DetailType,
-                    Qty = item.Qty,
                     UnitPrice = item.UnitPrice,
                     Amount = item.Amount
                 };

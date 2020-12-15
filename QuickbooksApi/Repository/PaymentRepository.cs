@@ -1,4 +1,5 @@
 ﻿using QuickbooksApi.Models;
+using System;
 using System.Configuration;
 using System.Data.SqlClient;
 
@@ -36,8 +37,9 @@ namespace QuickbooksApi.Repository
                 {
                     cmd.ExecuteNonQuery();
                 }
-                catch
+                catch(Exception e)
                 {
+                    throw e;
                 }
                 con.Close();
             }
@@ -53,6 +55,7 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@Id", id);
                 try
                 {
+                    con.Open();
                     SqlDataReader rd = cmd.ExecuteReader();
                     if (rd.HasRows)
                     {
@@ -64,13 +67,39 @@ namespace QuickbooksApi.Repository
                             payment.CustomerRef.value = rd.GetString(3);
                         }
                     }
+                    con.Close();
                 }
-                catch
+                catch(Exception e)
                 {
-
+                    throw e;
                 }
             }
             return payment;
+        }
+
+        public void DeletePayment(string id)
+        {
+            var qry = @"IF EXISTS(SELECT * FROM PaymentInfo WHERE Id=@Id)
+                            BEGIN
+                                DELETE FROM PaymentInfo Where Id = @Id
+                            END";
+
+            using(SqlConnection con = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand(qry, con);
+                cmd.Parameters.AddWithValue("@Id", id);
+
+                try
+                {
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+                catch(Exception e)
+                {
+                    throw e;
+                }
+            }
         }
     }
 }

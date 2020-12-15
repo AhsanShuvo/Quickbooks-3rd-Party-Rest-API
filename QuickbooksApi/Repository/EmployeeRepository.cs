@@ -7,9 +7,11 @@ namespace QuickbooksApi.Repository
 {
     public class EmployeeRepository
     {
+        private string connectionString = ConfigurationManager.ConnectionStrings["QuickbooksDB"].ConnectionString;
+
         public void SaveEmployeeInfo(EmployeeInfo model)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["QuickbooksDB"].ConnectionString;
+            
             using(SqlConnection con = new SqlConnection(connectionString))
             {
                 try
@@ -46,6 +48,28 @@ namespace QuickbooksApi.Repository
                 catch (Exception e)
                 {
                     throw (e);
+                }
+            }
+        }
+
+        public void DeleteEmployee(string id)
+        {
+            using(SqlConnection con = new SqlConnection(connectionString))
+            {
+                var qry = "DELETE FROM EmployeeInfo WHERE Id=@Id";
+
+                SqlCommand cmd = new SqlCommand(qry, con);
+                cmd.Parameters.AddWithValue("@Id", id);
+
+                try
+                {
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+                catch(Exception e)
+                {
+                    throw e;
                 }
             }
         }

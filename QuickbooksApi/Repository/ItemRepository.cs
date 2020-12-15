@@ -1,4 +1,5 @@
 ﻿using QuickbooksApi.Models;
+using System;
 using System.Configuration;
 using System.Data.SqlClient;
 
@@ -35,15 +36,41 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@PurchaseCost", model.PurchaseCost);
                 cmd.Parameters.AddWithValue("@QtyOnHand", model.QtyOnHand);
 
-                con.Open();
+                
                 try
                 {
+                    con.Open();
                     cmd.ExecuteNonQuery();
+                    con.Close();
                 }
-                catch
+                catch(Exception e)
                 {
+                    throw e;
                 }
-                con.Close();
+            }
+        }
+
+        public void DeleteItem(string id)
+        {
+            using(SqlConnection con = new SqlConnection(connectionString))
+            {
+                var qry = @"IF EXISTS(SELECT * FROM ItemInfo WHERE Id = @Id)
+                                BEGIN
+                                    DELETE FROM ItemInfo WHERE Id = @Id
+                                END";
+                SqlCommand cmd = new SqlCommand(qry, con);
+                cmd.Parameters.AddWithValue("@Id", id);
+
+                try
+                {
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+                catch(Exception e)
+                {
+                    throw e;
+                }
             }
         }
 
@@ -70,15 +97,17 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@Active", model.Active);
                 cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
 
-                con.Open();
+                
                 try
                 {
+                    con.Open();
                     cmd.ExecuteNonQuery();
+                    con.Close();
                 }
-                catch
+                catch(Exception e)
                 {
+                    throw e;
                 }
-                con.Close();
             }
         }
     }
