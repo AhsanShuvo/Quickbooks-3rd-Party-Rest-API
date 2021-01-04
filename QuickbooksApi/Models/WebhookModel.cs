@@ -32,7 +32,5 @@ namespace QuickbooksApi.Models
         public string Name { get; set; }
         [JsonProperty("operation")]
         public string Operation { get; set; }
-        [JsonProperty("lastUpdated")]
-        public string LastUpdatedDate { get; set; }
     }
 }

@@ -1,18 +1,21 @@
-﻿using System;
+﻿using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace QuickbooksApi.ApiService
 {
-    public class ApiDataProvider
+    public class ApiDataProvider : IApiDataProvider
     {
         public async Task<string> Get(string uri, string token)
         {
             string responseAsString = string.Empty;
             try
             {
-                using(HttpClient client = new HttpClient())
+                Logger.WriteDebug("Get api request to quickbooks server to retrieve data.");
+                using (HttpClient client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Add("Accept", "application/json");
                     client.DefaultRequestHeaders.Add("ContentType", "application/json");
@@ -20,13 +23,19 @@ namespace QuickbooksApi.ApiService
                     var response = await client.GetAsync(uri);
                     if (response.IsSuccessStatusCode)
                     {
+                        Logger.WriteDebug("Api request is successfull");
                         responseAsString = await response.Content.ReadAsStringAsync();
+                    }
+                    else
+                    {
+                        Logger.WriteDebug("Api request failed. Status code: " + response.StatusCode + "");
                     }
                 }
             }
-            catch
+            catch(Exception e)
             {
-
+                Logger.WriteError(e, "Failed to connect to quickbooks server.");
+                throw e;
             }
             
             return responseAsString;
@@ -38,7 +47,8 @@ namespace QuickbooksApi.ApiService
 
             try
             {
-                using(HttpClient client = new HttpClient())
+                Logger.WriteDebug("Post api request to quickbooks server to modify data.");
+                using (HttpClient client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Add("Accept", "application/json");
                     client.DefaultRequestHeaders.Add("ContentType", "application/json");
@@ -46,14 +56,19 @@ namespace QuickbooksApi.ApiService
                     HttpResponseMessage response = await client.PostAsync(uri, requestBody);
                     if (response.IsSuccessStatusCode)
                     {
+                        Logger.WriteDebug("Api request is successfull");
                         resposeAsString = await response.Content.ReadAsStringAsync();
-
+                    }
+                    else
+                    {
+                        Logger.WriteDebug("Api request failed. Status code: " + response.StatusCode + "");
                     }
                 }
             }
-            catch
+            catch(Exception e)
             {
-
+                Logger.WriteError(e, "Failed to connect to quickbooks server.");
+                throw e;
             }
             
             return resposeAsString;
@@ -63,6 +78,7 @@ namespace QuickbooksApi.ApiService
         {
             try
             {
+                Logger.WriteDebug("Api request to download pdf file.");
                 using (HttpClient client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Add("ContentType", "application/octet-stream");
@@ -80,9 +96,10 @@ namespace QuickbooksApi.ApiService
                     }
                 }
             }
-            catch
+            catch(Exception e)
             {
-
+                Logger.WriteError(e, "Failed to download pdf file.");
+                throw e;
             }
         }
     }

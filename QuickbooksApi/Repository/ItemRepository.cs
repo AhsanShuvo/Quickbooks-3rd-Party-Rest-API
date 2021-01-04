@@ -1,17 +1,17 @@
-﻿using QuickbooksApi.Models;
+﻿using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
+using QuickbooksApi.Models;
 using System;
-using System.Configuration;
 using System.Data.SqlClient;
 
 namespace QuickbooksApi.Repository
 {
-    public class ItemRepository
+    public class ItemRepository : BaseRepository, IItemRepository
     {
-        private string connectionString = ConfigurationManager.ConnectionStrings["QuickbooksDB"].ConnectionString;
-
         public void SaveItemInfo(ItemInfo model)
         {
-            using(SqlConnection con = new SqlConnection(connectionString))
+            Logger.WriteDebug("Connecting to database server to insert/update iteminfo.");
+            using (SqlConnection con = new SqlConnection(connectionString))
             {
                 var qry = @"IF EXISTS(SELECT * FROM ItemInfo WHERE Id = @Id)
                                 BEGIN
@@ -35,24 +35,27 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@UnitPrice", model.UnitPrice);
                 cmd.Parameters.AddWithValue("@PurchaseCost", model.PurchaseCost);
                 cmd.Parameters.AddWithValue("@QtyOnHand", model.QtyOnHand);
-
-                
                 try
                 {
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    con.Close();
                 }
                 catch(Exception e)
                 {
+                    Logger.WriteError(e, "Failed to connect to database to insert/update iteminfo.");
                     throw e;
+                }
+                finally
+                {
+                    con.Close();
                 }
             }
         }
 
         public void DeleteItem(string id)
         {
-            using(SqlConnection con = new SqlConnection(connectionString))
+            Logger.WriteDebug("Connecting to database server to delete iteminfo.");
+            using (SqlConnection con = new SqlConnection(connectionString))
             {
                 var qry = @"IF EXISTS(SELECT * FROM ItemInfo WHERE Id = @Id)
                                 BEGIN
@@ -60,23 +63,27 @@ namespace QuickbooksApi.Repository
                                 END";
                 SqlCommand cmd = new SqlCommand(qry, con);
                 cmd.Parameters.AddWithValue("@Id", id);
-
                 try
                 {
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    con.Close();
                 }
                 catch(Exception e)
                 {
+                    Logger.WriteError(e, "Failed to connect to database to delete iteminfo.");
                     throw e;
+                }
+                finally
+                {
+                    con.Close();
                 }
             }
         }
 
-        public void SaveCategoryInfo(CategoryInfo model)
+        public void SaveCategoryInfo(ItemInfo model)
         {
-            using(SqlConnection con = new SqlConnection(connectionString))
+            Logger.WriteDebug("Connecting to database server to insert/update iteminfo.");
+            using (SqlConnection con = new SqlConnection(connectionString))
             {
                 var qry = @"IF EXISTS(SELECT * FROM CategoryInfo WHERE Id = @Id)
                               BEGIN
@@ -96,17 +103,19 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@Type", model.Type);
                 cmd.Parameters.AddWithValue("@Active", model.Active);
                 cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
-
-                
                 try
                 {
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    con.Close();
                 }
                 catch(Exception e)
                 {
+                    Logger.WriteError(e, "Failed to connect to database to delete iteminfo.");
                     throw e;
+                }
+                finally
+                {
+                    con.Close();
                 }
             }
         }

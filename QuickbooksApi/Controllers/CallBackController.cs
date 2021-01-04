@@ -1,5 +1,6 @@
-﻿using QuickbooksApi.Models;
-using QuickbooksApi.Repository;
+﻿using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
+using QuickbooksApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -11,10 +12,16 @@ namespace QuickbooksApi.Controllers
 {
     public class CallBackController : Controller
     {
-        private UserRepository _repo = new UserRepository();
+        private IUserRepository _repository;
+
+        public CallBackController(IUserRepository repository)
+        {
+            _repository = repository;
+        }
 
         public async Task<ActionResult> Index()
         {
+            Logger.WriteDebug("Successfully redirected to callback url.");
             string code = Request.QueryString["code"] ?? "none";
             string realmId = Request.QueryString["realmId"] ?? "none";
             await GetAuthTokensAsync(code, realmId);
@@ -27,10 +34,7 @@ namespace QuickbooksApi.Controllers
             {
                 Session["realmId"] = realmId;
             }
-
-            Request.GetOwinContext().Authentication.SignOut("TempState");
             var tokenResponse = await AppController.auth2Client.GetBearerTokenAsync(code);
-
             var claims = new List<Claim>();
 
             if (Session["realmId"] != null)
@@ -61,7 +65,7 @@ namespace QuickbooksApi.Controllers
                 AccessTokenExpiresIn = Convert.ToDateTime(claims[2].Value),
                 RefreshTokenExpiresIn = Convert.ToDateTime(claims[4].Value)
             };
-            _repo.SaveUserInfo(user);
+            _repository.SaveUserInfo(user);
         }
     }
 }

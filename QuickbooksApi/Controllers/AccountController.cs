@@ -1,23 +1,24 @@
 ﻿using Newtonsoft.Json;
-using QuickbooksApi.ApiService;
-using QuickbooksApi.ModelBuilder;
+using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
 using QuickbooksApi.Models;
-using QuickbooksApi.Repository;
-using System.Configuration;
-using System.Net;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace QuickbooksApi.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
-        private JsonToModelBuilder _builder = new JsonToModelBuilder();
-        private AccountRepository _repository = new AccountRepository();
-        private ApiDataProvider _provider = new ApiDataProvider();
+        private IAccountRepository _repository;
+
+        public AccountController(
+            IApiDataProvider provider, IAccountRepository repository, 
+            IJsonToModelBuilder builder) : base(provider, builder)
+        {
+            _repository = repository;
+        }
 
         public ActionResult Index()
         {
@@ -32,6 +33,7 @@ namespace QuickbooksApi.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateAccount(AccountInfo model)
         {
+            Logger.WriteDebug("Creating new account.");
             AccountInfo acct = new AccountInfo()
             {
                 Name = model.Name,
@@ -40,13 +42,7 @@ namespace QuickbooksApi.Controllers
                 CurrentBalance = model.CurrentBalance
             };
             var requestBody = new StringContent(JsonConvert.SerializeObject(acct), Encoding.UTF8, "application/json");
-
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/account?minorversion=55", qboBaseUrl, realmId);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var acctInfo = await _provider.Post(uri, requestBody, token);
+            var acctInfo = await HandlePostRequest(requestBody, EntityType.Account.ToString().ToLower());
             AccountInfo accountInfo = _builder.GetAccountModel(acctInfo);
             _repository.SaveAccountInfo(accountInfo);
 
@@ -55,18 +51,12 @@ namespace QuickbooksApi.Controllers
 
         public async Task<ActionResult> AccountDetails()
         {
-            var accountId = WebUtility.UrlEncode("93");
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/account/{2}?minorversion=55", qboBaseUrl, realmId, accountId);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var accountObject = await _provider.Get(uri, token);
-            var accountInfo = _builder.GetAccountModel(accountObject);
+            Logger.WriteDebug("Showing account details.");
+            var acctInfo = await HandleGetRequest("93", EntityType.Account.ToString().ToLower());
+            AccountInfo accountInfo = _builder.GetAccountModel(acctInfo);
             _repository.SaveAccountInfo(accountInfo);
             return View(accountInfo);
         }
-
 
         //To do
         public async Task<ActionResult> UpdateAccount()
@@ -94,13 +84,7 @@ namespace QuickbooksApi.Controllers
                 Name = "Shuvo New Credit"
             };
             var requestBody = new StringContent(JsonConvert.SerializeObject(account), Encoding.UTF8, "application/json");
-
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/account?minorversion=55", qboBaseUrl, realmId);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var accountInfo = await _provider.Post(uri, requestBody, token); 
+            var accountInfo = await HandlePostRequest(requestBody, EntityType.Account.ToString().ToLower());
             return RedirectToAction("Index");
         }
     }

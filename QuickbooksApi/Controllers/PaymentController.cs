@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
-using QuickbooksApi.ApiService;
-using QuickbooksApi.ModelBuilder;
+using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
 using QuickbooksApi.Models;
-using QuickbooksApi.Repository;
 using System.Configuration;
 using System.Net;
 using System.Net.Http;
@@ -13,11 +12,16 @@ using System.Web.Mvc;
 
 namespace QuickbooksApi.Controllers
 {
-    public class PaymentController : Controller
+    public class PaymentController : BaseController
     {
-        ApiDataProvider _provider = new ApiDataProvider();
-        JsonToModelBuilder _builder = new JsonToModelBuilder();
-        PaymentRepository _repository = new PaymentRepository();
+        private IPaymentRepository _repository;
+
+        public PaymentController(
+            IPaymentRepository repository, IApiDataProvider provider,
+            IJsonToModelBuilder builder): base(provider, builder)
+        {
+            _repository = repository;
+        }
 
         public ActionResult Index()
         {
@@ -32,20 +36,14 @@ namespace QuickbooksApi.Controllers
         [HttpPost]
         public async Task<ActionResult> CreatePayment(PaymentInfo model)
         {
+            Logger.WriteDebug("Creating new payment.");
             PaymentInfo payment = new PaymentInfo()
             {
                 TotalAmt = model.TotalAmt,
                 CustomerRef = model.CustomerRef
             };
-
             var requestBody = new StringContent(JsonConvert.SerializeObject(payment), Encoding.UTF8, "application/json");
-
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/payment?minorversion=55", qboBaseUrl, realmId);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var paymentObj= await _provider.Post(uri, requestBody, token);
+            var paymentObj= await HandlePostRequest(requestBody, "payment");
             var paymentInfo = _builder.GetPaymentModel(paymentObj);
             _repository.SavePaymentInfo(paymentInfo);
             return RedirectToAction("Index");
@@ -68,15 +66,8 @@ namespace QuickbooksApi.Controllers
             };
 
             var requestBody = new StringContent(JsonConvert.SerializeObject(payment), Encoding.UTF8, "application/json");
-
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/payment?operation=delete&minorversion=55", qboBaseUrl, realmId);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var deleteStatus = await _provider.Post(uri, requestBody, token);
+            await HandleDeleteRequest(requestBody, EntityType.Payment.ToString().ToLower());
             _repository.DeletePayment(id);
-
             return RedirectToAction("Index");
         }
 

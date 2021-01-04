@@ -1,16 +1,16 @@
-﻿using QuickbooksApi.Models;
+﻿using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
+using QuickbooksApi.Models;
 using System;
-using System.Configuration;
 using System.Data.SqlClient;
 
 namespace QuickbooksApi.Repository
 {
-    public class VendorRepository
+    public class VendorRepository : BaseRepository, IVendorRepository
     {
-        private string connectionString = ConfigurationManager.ConnectionStrings["QuickbooksDB"].ConnectionString;
-
         public void SaveVendorInfo(VendorInfo model)
         {
+            Logger.WriteDebug("Connecting to database server to insert/update vendorinfo.");
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 var qry = @"IF EXISTS(SELECT * FROM VendorInfo WHERE Id = @Id)
@@ -31,23 +31,26 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@Active", model.Active);
                 cmd.Parameters.AddWithValue("@Balance", model.Balance);
                 cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
-
                 try
                 {
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    con.Close();
                 }
                 catch(Exception e)
                 {
+                    Logger.WriteError(e, "Failed to connect to database to insert/update vendorinfo.");
                     throw e;
                 }
-                
+                finally
+                {
+                    con.Close();
+                }
             }
         }
 
         public void DeleteVendor(string id)
         {
+            Logger.WriteDebug("Connecting to database server to delete vendorinfo.");
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 var qry = @"IF EXISTS(SELECT * FROM VendorInfo WHERE Id=@Id)
@@ -57,16 +60,19 @@ namespace QuickbooksApi.Repository
 
                 SqlCommand cmd = new SqlCommand(qry, con);
                 cmd.Parameters.AddWithValue("@Id", id);
-
                 try
                 {
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    con.Close();
                 }
                 catch(Exception e)
                 {
+                    Logger.WriteError(e, "Failed to connect to database to delete vendorinfo.");
                     throw e;
+                }
+                finally
+                {
+                    con.Close();
                 }
             }
         }

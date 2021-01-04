@@ -1,4 +1,4 @@
-﻿using QuickbooksApi.Webhookhandler;
+﻿using QuickbooksApi.Interfaces;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -8,7 +8,12 @@ namespace QuickbooksApi.Controllers
 {
     public class WebhookController : Controller
     {
-        private WebhookManager _manager = new WebhookManager();
+        private IWebhookManager _manager;
+
+        public WebhookController(IWebhookManager manager)
+        {
+            _manager = manager;
+        }
 
         [HttpPost]
         public async Task<ActionResult> Index()

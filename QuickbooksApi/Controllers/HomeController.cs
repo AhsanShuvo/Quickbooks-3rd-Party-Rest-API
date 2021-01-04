@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using QuickbooksApi.Models;
-using QuickbooksApi.Repository;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace QuickbooksApi.Controllers
 {

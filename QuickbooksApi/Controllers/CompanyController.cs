@@ -1,21 +1,24 @@
 ﻿using Newtonsoft.Json;
-using QuickbooksApi.ApiService;
-using QuickbooksApi.ModelBuilder;
-using QuickbooksApi.Repository;
-using System.Configuration;
+using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace QuickbooksApi.Controllers
 {
-    public class CompanyController : Controller
+    public class CompanyController : BaseController
     {
-        JsonToModelBuilder _builder = new JsonToModelBuilder();
-        ApiDataProvider _provider = new ApiDataProvider();
-        CompanyRepository _repository = new CompanyRepository();
+        private ICompanyRepository _repository;
+
+        public CompanyController(
+            ICompanyRepository repository, IApiDataProvider provider,
+            IJsonToModelBuilder builder) : base(provider, builder)
+        {
+            _repository = repository;
+        }
+
         public ActionResult Index()
         {
             return View();
@@ -23,12 +26,9 @@ namespace QuickbooksApi.Controllers
 
         public async  Task<ActionResult> CompanyDetails()
         {
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
+            Logger.WriteDebug("Showing company details");
             var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/companyinfo/{2}?minorversion=55", qboBaseUrl, realmId, realmId);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var companyObject = await _provider.Get(uri, token);
+            var companyObject = await HandleGetRequest(realmId, "companyinfo");
             var companyInfo = _builder.GetCompanyModel(companyObject);
             _repository.SaveCompanyDetails(companyInfo);
             return View(companyInfo);
@@ -36,6 +36,7 @@ namespace QuickbooksApi.Controllers
 
         public async Task<ActionResult> UpdateCompany()
         {
+            Logger.WriteDebug("Updating company details.");
             var company = new
             {
                 SyncToken = "16",
@@ -45,13 +46,7 @@ namespace QuickbooksApi.Controllers
                 Id = "1"
             };
             var requestBody = new StringContent(JsonConvert.SerializeObject(company), Encoding.UTF8, "application/json");
-
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/companyinfo?minorversion=55", qboBaseUrl, realmId);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var companyObj = await _provider.Post(uri, requestBody, token);
+            var companyObj = await HandlePostRequest(requestBody, "companyinfo");
             var companyInfo = _builder.GetCompanyModel(companyObj);
             _repository.SaveCompanyDetails(companyInfo);
 

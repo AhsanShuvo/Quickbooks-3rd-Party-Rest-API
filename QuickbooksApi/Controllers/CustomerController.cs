@@ -1,23 +1,24 @@
 ﻿using Newtonsoft.Json;
-using QuickbooksApi.ApiService;
-using QuickbooksApi.ModelBuilder;
+using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
 using QuickbooksApi.Models;
-using QuickbooksApi.Repository;
-using System.Configuration;
-using System.Net;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace QuickbooksApi.Controllers
 {
-    public class CustomerController : Controller
+    public class CustomerController : BaseController
     {
-        private JsonToModelBuilder _builder = new JsonToModelBuilder();
-        private CustomerRepository _repository = new CustomerRepository();
-        private ApiDataProvider _provider = new ApiDataProvider();
+        private ICustomerRepository _repository;
+
+        public CustomerController(
+            ICustomerRepository repository, IApiDataProvider provider,
+            IJsonToModelBuilder builder): base(provider, builder)
+        {
+            _repository = repository;
+        }
 
         public ActionResult Index()
         {
@@ -32,6 +33,7 @@ namespace QuickbooksApi.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateCustomer(CustomerInfo model)
         {
+            Logger.WriteDebug("Creating new customer");
             var customer = new CustomerInfo {
                 DisplayName =model.DisplayName,
                 CompanyName = model.CompanyName,
@@ -39,13 +41,7 @@ namespace QuickbooksApi.Controllers
                 Active = model.Active
             };
             var requestBody = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8, "application/json");
-
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/customer?minorversion=55", qboBaseUrl, realmId);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var customerObject = await _provider.Post(uri, requestBody, token);
+            var customerObject = await HandlePostRequest(requestBody, EntityType.Customer.ToString().ToLower());
             CustomerInfo customerInfo = _builder.GetCustomerModel(customerObject);
             _repository.SaveCustomerDetails(customerInfo);
             return RedirectToRoute("Index");
@@ -53,14 +49,7 @@ namespace QuickbooksApi.Controllers
 
         public async Task<ActionResult> CustomerDetails()
         {
-            var customerId = "68";
-            var id = WebUtility.UrlEncode(customerId);
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/customer/{2}?minorversion=55", qboBaseUrl, realmId, id);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var customerObject = await _provider.Get(uri, token);
+            var customerObject = await HandleGetRequest("68", EntityType.Customer.ToString().ToLower());
             var customerInfo = _builder.GetCustomerModel(customerObject);
             _repository.SaveCustomerDetails(customerInfo);
             return View(customerInfo);
@@ -70,20 +59,14 @@ namespace QuickbooksApi.Controllers
         {
             var customer = new CustomerInfo
             {
-                CompanyName = "New Aviation",
+                CompanyName = "New Aviation 2",
                 DisplayName = "Mark",
                 SyncToken = "0",
                 Id = "2",
             };
 
             var requestBody = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8, "application/json");
-
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/customer?minorversion=55", qboBaseUrl, realmId);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var customerObj = await _provider.Post(uri, requestBody, token);
+            var customerObj = await HandlePostRequest(requestBody, EntityType.Customer.ToString().ToLower());
             var customerInfo = _builder.GetCustomerModel(customerObj);
             _repository.SaveCustomerDetails(customerInfo);
             return RedirectToAction("Index");

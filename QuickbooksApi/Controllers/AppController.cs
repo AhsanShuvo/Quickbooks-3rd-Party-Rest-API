@@ -1,4 +1,5 @@
 ﻿using Intuit.Ipp.OAuth2PlatformClient;
+using QuickbooksApi.Helper;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
@@ -18,6 +19,7 @@ namespace QuickbooksApi.Controllers
 
         public ActionResult Index()
         {
+            Logger.WriteDebug("Starting application");
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             Session.Clear();
             Session.Abandon();
@@ -41,6 +43,7 @@ namespace QuickbooksApi.Controllers
 
         public ActionResult Error()
         {
+            Logger.WriteDebug("Something wrong happened. Failed to start application.");
             return View("Error");
         }
     }

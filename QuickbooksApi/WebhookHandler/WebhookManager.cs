@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
-using QuickbooksApi.ApiService;
+using QuickbooksApi.Interfaces;
 using QuickbooksApi.ModelBuilder;
 using QuickbooksApi.Models;
-using QuickbooksApi.Repository;
 using System;
 using System.Configuration;
 using System.IO;
@@ -11,15 +10,43 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickbooksApi.Webhookhandler
+namespace QuickbooksApi.Webhookhandler 
 {
-    public class WebhookManager
+    public class WebhookManager : IWebhookManager
     {
+        private IUserRepository _user;
+        private IApiDataProvider _provider;
+        private IAccountRepository _accountRepo;
+        private ICompanyRepository _companyRepo;
+        private ICustomerRepository _customerRepo;
+        private IEmployeeRepository _employeeRepo;
+        private IInvoiceRepository _invoiceRepo;
+        private IItemRepository _itemRepo;
+        private IPaymentRepository _paymentRepo;
+        private IVendorRepository _vendorRepo;
+        private IJsonToModelBuilder _builder;
+
+        public WebhookManager(
+            IUserRepository user, IApiDataProvider provider, IAccountRepository accountRepo,
+            ICompanyRepository companyRepo, ICustomerRepository customerRepo, IEmployeeRepository employeeRepo,
+            IInvoiceRepository invoiceRepo, IItemRepository itemRepo, IPaymentRepository paymentRepo,
+            IVendorRepository vendorRepo, IJsonToModelBuilder builder)
+        {
+            _user = user;
+            _provider = provider;
+            _accountRepo = accountRepo;
+            _companyRepo = companyRepo;
+            _customerRepo = customerRepo;
+            _employeeRepo = employeeRepo;
+            _invoiceRepo = invoiceRepo;
+            _itemRepo = itemRepo;
+            _paymentRepo = paymentRepo;
+            _vendorRepo = vendorRepo;
+            _builder = builder;
+        }
+
         private string _hashKey = ConfigurationManager.AppSettings["intuit-signature"];
         private string _qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-        private UserRepository _user = new UserRepository();
-        private ApiDataProvider _provider = new ApiDataProvider();
-        private JsonToModelBuilder _builder = new JsonToModelBuilder();
 
         public async Task Init(string payload, string signature)
         {
@@ -79,99 +106,98 @@ namespace QuickbooksApi.Webhookhandler
 
             if(model.Name.Equals(EntityType.Account.ToString()))
             {
-                var _repo = new AccountRepository();
                 if(model.Operation.Equals(Operations.Delete.ToString()))
                 {
-                    _repo.DeleteAccountInfo(model.Id);
+                    _accountRepo.DeleteAccountInfo(model.Id);
                 }
                 else
                 {
                     AccountInfo account = _builder.GetAccountModel(data);
-                    _repo.SaveAccountInfo(account);
+                    _accountRepo.SaveAccountInfo(account);
                 }
             }
             else if(model.Name.Equals(EntityType.Company.ToString()))
             {
-                var _repo = new CompanyRepository();
                 CompanyInfo company = _builder.GetCompanyModel(data);
-                _repo.SaveCompanyDetails(company);
+                _companyRepo.SaveCompanyDetails(company);
             }
             else if(model.Name.Equals(EntityType.Customer.ToString()))
             {
-                var _repo = new CustomerRepository();
                 if (model.Operation.Equals(Operations.Delete.ToString()))
                 {
-                    _repo.DeleteCustomer(model.Id);
+                    _customerRepo.DeleteCustomer(model.Id);
                 }
                 else
                 {
                     CustomerInfo customer = _builder.GetCustomerModel(data);
-                    _repo.SaveCustomerDetails(customer);
+                    _customerRepo.SaveCustomerDetails(customer);
                 }
             }
             else if(model.Name.Equals(EntityType.Payment.ToString()))
             {
-                var _repo = new PaymentRepository();
                 if (model.Operation.Equals(Operations.Delete.ToString()))
                 {
-                    _repo.DeletePayment(model.Id);
+                    _paymentRepo.DeletePayment(model.Id);
                 }
                 else
                 {
                     PaymentInfo payment = _builder.GetPaymentModel(data);
-                    _repo.SavePaymentInfo(payment);
+                    _paymentRepo.SavePaymentInfo(payment);
                 }
             }
             else if(model.Name.Equals(EntityType.Vendor.ToString()))
             {
-                var _repo = new VendorRepository();
                 if (model.Operation.Equals(Operations.Delete.ToString()))
                 {
-                    _repo.DeleteVendor(model.Id);
+                    _vendorRepo.DeleteVendor(model.Id);
                 }
                 else
                 {
                     VendorInfo vendor = _builder.GetVendorModel(data);
-                    _repo.SaveVendorInfo(vendor);
+                    _vendorRepo.SaveVendorInfo(vendor);
                 }
             }
-            else if(model.Name.Equals(EntityType.Item.ToString())) // Need to handle Item or category manually
+            else if(model.Name.Equals(EntityType.Item.ToString()))
             {
-                var _repo = new ItemRepository();
                 if (model.Operation.Equals(Operations.Delete.ToString()))
                 {
-                    _repo.DeleteItem(model.Id);
+                    _itemRepo.DeleteItem(model.Id);
                 }
                 else
                 {
                     ItemInfo item = _builder.GetItemModel(data);
-                    _repo.SaveItemInfo(item);
+                    if(item.Type.Equals("Category"))
+                    {
+                        _itemRepo.SaveCategoryInfo(item);
+                    }
+                    else
+                    {
+                        _itemRepo.SaveItemInfo(item);
+                    } 
                 }
             }
             else if(model.Name.Equals(EntityType.Employee.ToString()))
             {
-                var _repo = new EmployeeRepository();
                 if (model.Operation.Equals(Operations.Delete))
                 {
-                    _repo.DeleteEmployee(model.Id);
+                    _employeeRepo.DeleteEmployee(model.Id);
                 }
                 else
                 {
                     EmployeeInfo employee = _builder.GetEmployeeModel(data);
-                    _repo.SaveEmployeeInfo(employee);
+                    _employeeRepo.SaveEmployeeInfo(employee);
                 }
             }
             else if (model.Name.Equals(EntityType.Invoice.ToString()))
             {
-                var _repo = new InvoiceRepository();
                 if (model.Operation.Equals(Operations.Delete))
                 {
-                    _repo.DeleteInvoiceInfo(model.Id);
+                    _invoiceRepo.DeleteInvoiceInfo(model.Id);
                 }
                 else
                 {
                     InvoiceInfo invoice = _builder.GetInvoice(data);
-                    _repo.SaveInvoiceInfo(invoice);
+                    _invoiceRepo.SaveInvoiceInfo(invoice);
                 }
             }
         }

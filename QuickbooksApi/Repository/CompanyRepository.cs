@@ -1,14 +1,16 @@
-﻿using QuickbooksApi.Models;
-using System.Configuration;
+﻿using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
+using QuickbooksApi.Models;
+using System;
 using System.Data.SqlClient;
 
 namespace QuickbooksApi.Repository
 {
-    public class CompanyRepository
+    public class CompanyRepository : BaseRepository, ICompanyRepository
     {
         public void SaveCompanyDetails(CompanyInfo model)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["QuickbooksDB"].ConnectionString;
+            Logger.WriteDebug("Connecting to database server to update companyinfo.");
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 var qry = @"IF EXISTS(SELECT * FROM CompanyInfo WHERE Id = @Id)
@@ -28,15 +30,20 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@Name", model.CompanyName);
                 cmd.Parameters.AddWithValue("@AccountType", model.CompanyStartDate);
                 cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
-                con.Open();
                 try
                 {
+                    con.Open();
                     cmd.ExecuteNonQuery();
                 }
-                catch
+                catch(Exception e)
                 {
+                    Logger.WriteError(e, "Failed to connect to database server to update companyinfo.");
+                    throw e;
                 }
-                con.Close();
+                finally
+                {
+                    con.Close();
+                }
             }
         }
     }

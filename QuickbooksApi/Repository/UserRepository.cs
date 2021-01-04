@@ -1,17 +1,17 @@
-﻿using QuickbooksApi.Models;
+﻿using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
+using QuickbooksApi.Models;
 using System;
-using System.Configuration;
 using System.Data.SqlClient;
 
 namespace QuickbooksApi.Repository
 {
-    public class UserRepository
+    public class UserRepository : BaseRepository, IUserRepository
     {
-        private string connectionString = ConfigurationManager.ConnectionStrings["QuickbooksDB"].ConnectionString;
-
         public void SaveUserInfo(UserInfo user)
         {
-            using(SqlConnection con = new SqlConnection(connectionString))
+            Logger.WriteDebug("Connecting to database server to insert/update userinfo.");
+            using (SqlConnection con = new SqlConnection(connectionString))
             {
                 var qry = @"IF EXISTS(SELECT * FROM UserInfo WHERE RealmId = @RealmId)
                                 BEGIN
@@ -31,23 +31,27 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@RefreshToken", user.RefreshToken);
                 cmd.Parameters.AddWithValue("@AccessTokenExpiresIn", user.AccessTokenExpiresIn);
                 cmd.Parameters.AddWithValue("@RefreshTokenExpiresIn", user.RefreshTokenExpiresIn);
-
                 try
                 {
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    con.Close();
                 }
                 catch(Exception e)
                 {
+                    Logger.WriteError(e, "Failed to connect to database to insert/update userinfo.");
                     throw e;
+                }
+                finally
+                {
+                    con.Close();
                 }
             }
         }
 
         public UserInfo GetUserInfo(string realmId)
         {
-            using(SqlConnection con = new SqlConnection(connectionString))
+            Logger.WriteDebug("Connecting to database server to get userinfo.");
+            using (SqlConnection con = new SqlConnection(connectionString))
             {
                 var qry = "SELECT * FROM UserInfo WHERE RealmId = @RealmId";
 
@@ -69,11 +73,15 @@ namespace QuickbooksApi.Repository
                             user.RefreshTokenExpiresIn = rd.GetDateTime(4);
                         }
                     }
-                    con.Close();
                 }
                 catch(Exception e)
                 {
+                    Logger.WriteError(e, "Failed to connect to database to get userinfo.");
                     throw e;
+                }
+                finally
+                {
+                    con.Close();
                 }
                 return user;
             }

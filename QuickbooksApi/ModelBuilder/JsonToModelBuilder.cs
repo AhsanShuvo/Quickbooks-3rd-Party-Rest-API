@@ -1,179 +1,57 @@
 ﻿using Newtonsoft.Json;
+using QuickbooksApi.Interfaces;
 using QuickbooksApi.Models;
-using System.Collections.Generic;
 
 namespace QuickbooksApi.ModelBuilder
 {
-    public class JsonToModelBuilder
+    public class JsonToModelBuilder : IJsonToModelBuilder
     {
-        public CustomerInfo GetCustomerModel(string modelJson)
+        public CustomerInfo GetCustomerModel(string json)
         {
-           
-            dynamic obj = JsonConvert.DeserializeObject(modelJson);
-            dynamic model = obj.Customer;
-            CustomerInfo customer = new CustomerInfo()
-            {
-                Id = model.Id,
-                DisplayName = model.DisplayName,
-                CompanyName = model.CompanyName,
-                Balance = model.Balance,
-                Active = model.Active,
-                SyncToken = model.SyncToken
-            };
-            return customer;
+            CustomerApiModel customerModel = JsonConvert.DeserializeObject<CustomerApiModel>(json);
+            return customerModel.Customer;
         }
 
-        public AccountInfo GetAccountModel(string modelJson)
+        public AccountInfo GetAccountModel(string json)
         {
-            dynamic obj = JsonConvert.DeserializeObject(modelJson);
-            dynamic model = obj.Account;
-            AccountInfo account = new AccountInfo()
-            {
-                Id = model.Id,
-                Name = model.Name,
-                AccountType = model.AccountType,
-                Classification = model.Classification,
-                CurrentBalance = model.CurrentBalance,
-                SyncToken = model.SyncToken
-            };
-            return account;
+            AccountApiModel acctModel = JsonConvert.DeserializeObject<AccountApiModel>(json);
+            return acctModel.Account;
         }
 
-        public EmployeeInfo GetEmployeeModel(string modelJson)
+        public EmployeeInfo GetEmployeeModel(string json)
         {
-            dynamic obj = JsonConvert.DeserializeObject(modelJson);
-            dynamic model = obj.Employee;
-            EmployeeInfo employee = new EmployeeInfo()
-            {
-                Id = model.Id,
-                GivenName = model.GivenName,
-                DisplayName = model.DisplayName,
-                Active = model.Active,
-                SyncToken = model.SyncToken
-            };
-                return employee;
+            EmployeeApiModel employeeModel = JsonConvert.DeserializeObject<EmployeeApiModel>(json);
+            return employeeModel.Employee;
         }
 
-        public CompanyInfo GetCompanyModel(string modelJson)
+        public CompanyInfo GetCompanyModel(string json)
         {
-            dynamic obj = JsonConvert.DeserializeObject(modelJson);
-            dynamic model = obj.CompanyInfo;
-            CompanyInfo company = new CompanyInfo()
-            {
-                Id = model.Id,
-                CompanyName = model.CompanyName,
-                CompanyStartDate = model.CompanyStartDate,
-                SyncToken = model.SyncToken
-            };
-            return company;
+            CompanyApiModel companyModel = JsonConvert.DeserializeObject<CompanyApiModel>(json);
+            return companyModel.CompanyInfo;
         }
 
-        public VendorInfo GetVendorModel(string modelJson)
+        public VendorInfo GetVendorModel(string json)
         {
-            dynamic obj = JsonConvert.DeserializeObject(modelJson);
-            dynamic model = obj.Vendor;
-            VendorInfo vendor = new VendorInfo()
-            {
-                Id = model.Id,
-                DisplayName = model.DisplayName,
-                CompanyName = model.CompanyName,
-                Active = model.Active,
-                Balance = model.Balance,
-                SyncToken = model.SyncToken
-            };
-            return vendor;
+            VendorApiModel vendorModel = JsonConvert.DeserializeObject<VendorApiModel>(json);
+            return vendorModel.Vendor;
         }
 
-        public ItemInfo GetItemModel(string modelJson)
+        public ItemInfo GetItemModel(string json)
         {
-            dynamic obj = JsonConvert.DeserializeObject(modelJson);
-            dynamic model = obj.Item;
-
-            ItemInfo item = new ItemInfo()
-            {
-                Id = model.Id,
-                Name = model.Name,
-                Type = model.Type,
-                Active = model.Active,
-                SyncToken = model.SyncToken,
-                QtyOnHand = model.Type == "Service" ? 0 : model.QtyOnHand,
-                UnitPrice = model.UnitPrice,
-                PurchaseCost = model.PurchaseCost
-            };
-            return item;
+            ItemApiModel itemModel = JsonConvert.DeserializeObject<ItemApiModel>(json);
+            return itemModel.Item;
         }
 
-        public CategoryInfo GetCategoryModel(string modelJson)
+        public PaymentInfo GetPaymentModel(string json)
         {
-            dynamic obj = JsonConvert.DeserializeObject(modelJson);
-            dynamic model = obj.Item;
-
-            CategoryInfo category = new CategoryInfo()
-            {
-                Id = model.Id,
-                Name = model.Name,
-                Type = model.Type,
-                Active = model.Active,
-                SyncToken = model.SyncToken
-            };
-            return category;
-
+            PaymentApiModel paymentModel = JsonConvert.DeserializeObject<PaymentApiModel>(json);
+            return paymentModel.Payment;
         }
 
-        public PaymentInfo GetPaymentModel(string modelJson)
+        public InvoiceInfo GetInvoice(string json)
         {
-            dynamic obj = JsonConvert.DeserializeObject(modelJson);
-            dynamic model = obj.Payment;
-            dynamic customer = model.CustomerRef;
-
-            CustomerReference customerRef = new CustomerReference()
-            {
-                name = customer.name,
-                value = customer.value
-            };
-
-            PaymentInfo payment = new PaymentInfo()
-            {
-                Id = model.Id,
-                TotalAmt = model.TotalAmt,
-                SyncToken = model.SyncToken,
-                CustomerRef = customerRef
-            };
-
-            return payment;
-        }
-
-        public InvoiceInfo GetInvoice(string modelJson)
-        {
-            dynamic obj = JsonConvert.DeserializeObject(modelJson);
-            dynamic model = obj.Invoice;
-            List<LineRef> Lines = new List<LineRef>();
-           var salesItems = model.Line;
-            foreach(var item in salesItems)
-            {
-                LineRef line = new LineRef()
-                {
-                    UnitPrice = item.UnitPrice,
-                    Amount = item.Amount
-                };
-                Lines.Add(line);
-            }
-
-            CustomerReference customerRef = new CustomerReference()
-            {
-                value = model.CustomerRef.value
-            };
-
-            InvoiceInfo invoice = new InvoiceInfo()
-            {
-                Id = model.Id,
-                TotalAmt = model.TotalAmt,
-                SyncToken = model.SyncToken,
-                TxnDate = model.TxnDate,
-                CustomerRef = customerRef,
-                Line = Lines
-            };
-            return invoice;
+            InvoiceApiModel invoiceModel = JsonConvert.DeserializeObject<InvoiceApiModel>(json);
+            return invoiceModel.Invoice;
         }
     }
 }

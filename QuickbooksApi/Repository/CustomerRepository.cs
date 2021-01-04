@@ -1,16 +1,16 @@
-﻿using QuickbooksApi.Models;
+﻿using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
+using QuickbooksApi.Models;
 using System;
-using System.Configuration;
 using System.Data.SqlClient;
 
 namespace QuickbooksApi.Repository
 {
-    public class CustomerRepository
+    public class CustomerRepository : BaseRepository, ICustomerRepository
     {
-        private string connectionString = ConfigurationManager.ConnectionStrings["QuickbooksDB"].ConnectionString;
         public void SaveCustomerDetails(CustomerInfo model)
         {
-            
+            Logger.WriteDebug("Connecting to database server to insert/update customerinfo.");
             using(SqlConnection con = new SqlConnection(connectionString))
             {
                 var qry = @"IF EXISTS(SELECT * FROM CustomerInfo WHERE Id =@Id )
@@ -31,17 +31,19 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@Balance", model.Balance);
                 cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
                 cmd.Parameters.AddWithValue("@Active", model.Active);
-
-                
                 try
                 {
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    con.Close();
                 }
                 catch(Exception e)
                 {
+                    Logger.WriteError(e, "Failed to connect to database to insert/update customerinfo.");
                     throw e;
+                }
+                finally
+                {
+                    con.Close();
                 }
             }
         }
@@ -50,20 +52,24 @@ namespace QuickbooksApi.Repository
         {
             using(SqlConnection con = new SqlConnection(connectionString))
             {
+                Logger.WriteDebug("Connecting to database server to delete customerinfo.");
                 var qry = "DELETE FROM CustomerInfo WHERE Id = @Id";
 
                 SqlCommand cmd = new SqlCommand(qry, con);
                 cmd.Parameters.AddWithValue("@Id", id);
-
                 try
                 {
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    con.Close();
                 }
                 catch(Exception e)
                 {
+                    Logger.WriteError(e, "Failed to connect to database server to delete customerinfo");
                     throw e;
+                }
+                finally
+                {
+                    con.Close();
                 }
             }
         }

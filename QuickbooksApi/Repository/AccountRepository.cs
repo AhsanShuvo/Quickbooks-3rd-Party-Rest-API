@@ -1,16 +1,16 @@
-﻿using QuickbooksApi.Models;
+﻿using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
+using QuickbooksApi.Models;
 using System;
-using System.Configuration;
 using System.Data.SqlClient;
 
 namespace QuickbooksApi.Repository
 {
-    public class AccountRepository
+    public class AccountRepository : BaseRepository, IAccountRepository
     {
-        private string connectionString = ConfigurationManager.ConnectionStrings["QuickbooksDB"].ConnectionString;
-
         public void SaveAccountInfo(AccountInfo model)
         {
+            Logger.WriteDebug("Connecting to the database server to insert/update account.");
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 var qry = @"IF EXISTS(SELECT * FROM AccountInfo WHERE Id = @Id)
@@ -32,16 +32,20 @@ namespace QuickbooksApi.Repository
                 cmd.Parameters.AddWithValue("@Classification", model.Classification);
                 cmd.Parameters.AddWithValue("@CurrentBalance", model.CurrentBalance);
                 cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
-                con.Open();
                 try
                 {
+                    con.Open();
                     cmd.ExecuteNonQuery();
                 }
                 catch(Exception e)
                 {
+                    Logger.WriteError(e, "Failed to connect to database.");
                     throw e;
                 }
-                con.Close();
+                finally
+                {
+                    con.Close();
+                }
             }
         }
 
@@ -49,19 +53,23 @@ namespace QuickbooksApi.Repository
         {
             using(SqlConnection con = new SqlConnection(connectionString))
             {
+                Logger.WriteDebug("Connecting to database server to delete account.");
                 var qry = "DELETE FROM AccountInfo Where Id = @Id";
                 SqlCommand cmd = new SqlCommand(qry, con);
                 cmd.Parameters.AddWithValue("@Id", id);
-
                 try
                 {
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    con.Close();
                 }
                 catch(Exception e)
                 {
+                    Logger.WriteError(e, "Failed to connect to server to delete account.");
                     throw e;
+                }
+                finally
+                {
+                    con.Close();
                 }
             }
         }

@@ -1,10 +1,22 @@
-﻿namespace QuickbooksApi.Models
+﻿using Newtonsoft.Json;
+
+namespace QuickbooksApi.Models
 {
-    public class PaymentInfo
+    public class PaymentInfo : BaseModel
     {
-        public string Id { get; set; }
+        [JsonProperty("TotalAmt")]
         public double TotalAmt { get; set; }
+        [JsonProperty("CustomerRef")]
         public CustomerReference CustomerRef { get; set; }
-        public string SyncToken { get; set; }
+        [JsonProperty("UnappliedAmt")]
+        public double UnappliedAmt { get; set; }
+        [JsonProperty("TxnDate")]
+        public string TxnDate { get; set; }
+    }
+
+    public class PaymentApiModel : BaseApiModel
+    {
+        [JsonProperty("Payment")]
+        public PaymentInfo Payment { get; set; }
     }
 }

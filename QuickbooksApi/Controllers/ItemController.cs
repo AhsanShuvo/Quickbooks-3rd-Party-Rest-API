@@ -1,23 +1,24 @@
 ﻿using Newtonsoft.Json;
-using QuickbooksApi.ApiService;
-using QuickbooksApi.ModelBuilder;
+using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
 using QuickbooksApi.Models;
-using QuickbooksApi.Repository;
-using System.Configuration;
-using System.Net;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace QuickbooksApi.Controllers
 {
-    public class ItemController : Controller
+    public class ItemController : BaseController
     {
-        private ApiDataProvider _provider = new ApiDataProvider();
-        private JsonToModelBuilder _builder = new JsonToModelBuilder();
-        private ItemRepository _repository = new ItemRepository();
+        private IItemRepository _repository;
+
+        public ItemController(
+            IItemRepository repository, IApiDataProvider provider,
+            IJsonToModelBuilder builder): base(provider, builder)
+        {
+            _repository = repository;
+        }
 
         public ActionResult Index()
         {
@@ -32,6 +33,7 @@ namespace QuickbooksApi.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateItem(ItemInfo model)
         {
+            Logger.WriteDebug("Creating new item.");
             ItemInfo item = new ItemInfo()
             {
                 Name = model.Name,
@@ -54,13 +56,7 @@ namespace QuickbooksApi.Controllers
             };
 
             var requestBody = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json");
-
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/item", qboBaseUrl, realmId);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var itemObj = await _provider.Post(uri, requestBody, token);
+            var itemObj = await HandlePostRequest(requestBody, EntityType.Item.ToString().ToLower());
             ItemInfo itemInfo = _builder.GetItemModel(itemObj);
             _repository.SaveItemInfo(itemInfo);
 
@@ -82,16 +78,9 @@ namespace QuickbooksApi.Controllers
                 Active = model.Active,
                 SyncToken = model.SyncToken
             };
-
             var requestBody = new StringContent(JsonConvert.SerializeObject(category), Encoding.UTF8, "application/json");
-
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/item?minorversion=4", qboBaseUrl, realmId);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var categoryObj = await _provider.Post(uri, requestBody, token);
-            CategoryInfo categoryInfo = _builder.GetCategoryModel(categoryObj);
+            var categoryObj = await HandlePostRequest(requestBody, EntityType.Item.ToString().ToLower(), "4");
+            ItemInfo categoryInfo = _builder.GetItemModel(categoryObj);
             _repository.SaveCategoryInfo(categoryInfo);
 
             return RedirectToAction("Index");
@@ -100,32 +89,18 @@ namespace QuickbooksApi.Controllers
         public async Task<ActionResult> BundleDetails()
         {
             string bundleId = "28";
-            var id = WebUtility.UrlEncode(bundleId);
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/item/{2}?minorversion=55", qboBaseUrl, realmId, id);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var itemObj = await _provider.Get(uri, token);
+            var itemObj = await HandleGetRequest(bundleId, EntityType.Item.ToString().ToLower());
             ItemInfo item = _builder.GetItemModel(itemObj);
             _repository.SaveItemInfo(item);
-
             return View(item);
         }
 
         public async Task<ActionResult> CategoryDetails()
         {
             string categoryId = "27";
-            var id = WebUtility.UrlEncode(categoryId);
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/item/{2}?minorversion=55", qboBaseUrl, realmId, id);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var categoryObj = await _provider.Get(uri, token);
-            var category = _builder.GetCategoryModel(categoryObj);
+            var categoryObj = await HandleGetRequest(categoryId, EntityType.Item.ToString().ToLower());
+            var category = _builder.GetItemModel(categoryObj);
             _repository.SaveCategoryInfo(category);
-
             return View(category);
         }
 
@@ -145,18 +120,10 @@ namespace QuickbooksApi.Controllers
                 Type = "Category",
                 Active = true
             };
-
             var requestBody = new StringContent(JsonConvert.SerializeObject(category), Encoding.UTF8, "application/json");
-
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/item?minorversion=4", qboBaseUrl, realmId);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var categoryObj = await _provider.Post(uri, requestBody, token);
-            CategoryInfo categoryInfo = _builder.GetCategoryModel(categoryObj);
+            var categoryObj = await HandlePostRequest(requestBody, EntityType.Item.ToString().ToLower(), "4");
+            ItemInfo categoryInfo = _builder.GetItemModel(categoryObj);
             _repository.SaveCategoryInfo(categoryInfo);
-
             return RedirectToAction("Index");
         }
     }

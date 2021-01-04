@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using QuickbooksApi.ApiService;
-using QuickbooksApi.ModelBuilder;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
 using QuickbooksApi.Models;
-using QuickbooksApi.Repository;
 using System.Configuration;
 using System.Net;
 using System.Net.Http;
@@ -13,10 +13,16 @@ using System.Web.Mvc;
 
 namespace QuickbooksApi.Controllers
 {
-    public class InvoiceController : Controller
+    public class InvoiceController : BaseController
     {
-        private ApiDataProvider _provider = new ApiDataProvider();
-        private InvoiceRepository _repository = new InvoiceRepository();
+        private IInvoiceRepository _repository;
+
+        public InvoiceController(
+            IInvoiceRepository repository, IApiDataProvider provider,
+            IJsonToModelBuilder builder): base(provider, builder)
+        {
+            _repository = repository;
+        }
 
         public ActionResult Index()
         {
@@ -36,6 +42,7 @@ namespace QuickbooksApi.Controllers
         [HttpPost]
         public async Task<ActionResult> DeleteInvoice(string id)
         {
+            Logger.WriteDebug("Deleting invoice.");
             InvoiceInfo invoice = new InvoiceInfo()
             {
                 Id = id,
@@ -43,13 +50,7 @@ namespace QuickbooksApi.Controllers
             };
 
             var requestBody = new StringContent(JsonConvert.SerializeObject(invoice), Encoding.UTF8, "application/json");
-
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/invoice?operation=delete&minorversion=55", qboBaseUrl, realmId);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var deleteStatus = await _provider.Post(uri, requestBody, token);
+            await HandleDeleteRequest(requestBody, EntityType.Invoice.ToString().ToLower());
             _repository.DeleteInvoiceInfo(id);
 
             return RedirectToAction("Index");

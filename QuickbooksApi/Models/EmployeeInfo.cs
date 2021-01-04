@@ -1,12 +1,25 @@
-﻿namespace QuickbooksApi.Models
+﻿using Newtonsoft.Json;
+
+namespace QuickbooksApi.Models
 {
-    public class EmployeeInfo
+    public class EmployeeInfo : BaseModel
     {
-        public string Id { get; set; }
+        [JsonProperty("DisplayName")]
         public string DisplayName { get; set; }
+        [JsonProperty("Active")]
         public bool Active { get; set; }
-        public string SyncToken { get; set; }
+        [JsonProperty("GivenName")]
         public string GivenName { get; set; }
+        [JsonProperty("FamilyName")]
         public string FamilyName { get; set; }
+        [JsonProperty("SSN")]
+        public string SSN { get; set; }
+
+    }
+
+    public class EmployeeApiModel : BaseApiModel
+    {
+        [JsonProperty("Employee")]
+        public EmployeeInfo Employee { get; set; }
     }
 }

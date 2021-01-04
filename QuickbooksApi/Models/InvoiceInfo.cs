@@ -2,13 +2,16 @@
 
 namespace QuickbooksApi.Models
 {
-    public class InvoiceInfo
+    public class InvoiceInfo : BaseModel
     {
-        public string Id { get; set; }
         public double TotalAmt { get; set; }
-        public string SyncToken { get; set; }
         public CustomerReference CustomerRef { get; set; }
         public List<LineRef> Line { get; set; }
         public string TxnDate { get; set; }
+    }
+
+    public class InvoiceApiModel : BaseApiModel
+    {
+        public InvoiceInfo Invoice { get; set; }
     }
 }

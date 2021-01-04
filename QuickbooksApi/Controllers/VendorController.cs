@@ -1,23 +1,24 @@
 ﻿using Newtonsoft.Json;
-using QuickbooksApi.ApiService;
-using QuickbooksApi.ModelBuilder;
+using QuickbooksApi.Helper;
+using QuickbooksApi.Interfaces;
 using QuickbooksApi.Models;
-using QuickbooksApi.Repository;
-using System.Configuration;
-using System.Net;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace QuickbooksApi.Controllers
 {
-    public class VendorController : Controller
+    public class VendorController : BaseController
     {
-        ApiDataProvider _provider = new ApiDataProvider();
-        JsonToModelBuilder _builder = new JsonToModelBuilder();
-        VendorRepository _repository = new VendorRepository();
+        private IVendorRepository _repository;
+
+        public VendorController(
+            IVendorRepository repository, IApiDataProvider provider,
+            IJsonToModelBuilder builder): base(provider, builder)
+        {
+            _repository = repository;
+        }
 
         public ActionResult Index()
         {
@@ -32,6 +33,7 @@ namespace QuickbooksApi.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateVendor(VendorInfo model)
         {
+            Logger.WriteDebug("Creating a new vendor.");
             VendorInfo vendor = new VendorInfo()
             {
                 DisplayName = model.DisplayName,
@@ -42,13 +44,7 @@ namespace QuickbooksApi.Controllers
             };
 
             var requestBody = new StringContent(JsonConvert.SerializeObject(vendor), Encoding.UTF8, "application/json");
-
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/vendor?minorversion=55", qboBaseUrl, realmId);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var vendorObject = await _provider.Post(uri, requestBody, token);
+            var vendorObject = await HandlePostRequest(requestBody, EntityType.Vendor.ToString().ToLower());
             VendorInfo vendorInfo = _builder.GetVendorModel(vendorObject);
             _repository.SaveVendorInfo(vendorInfo);
 
@@ -57,13 +53,7 @@ namespace QuickbooksApi.Controllers
 
         public async Task<ActionResult> VendorDetails()
         {
-            var id = WebUtility.UrlEncode("71");
-            var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            var realmId = Session["realmId"].ToString();
-            string uri = string.Format("{0}/v3/company/{1}/vendor/{2}?minorversion=55", qboBaseUrl, realmId, id);
-            var principal = User as ClaimsPrincipal;
-            var token = principal.FindFirst("access_token").Value;
-            var vendorObject = await _provider.Get(uri, token);
+            var vendorObject = await HandleGetRequest("71", EntityType.Vendor.ToString().ToLower());
             var vendorInfo = _builder.GetVendorModel(vendorObject);
             _repository.SaveVendorInfo(vendorInfo);
             return View(vendorInfo);
