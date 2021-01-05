@@ -1,6 +1,5 @@
 ﻿using QuickbooksApi.Helper;
 using QuickbooksApi.Interfaces;
-using QuickbooksApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;

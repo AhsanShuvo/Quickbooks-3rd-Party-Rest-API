@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using QuickbooksApi.Helper;
 using QuickbooksApi.Interfaces;
-using QuickbooksApi.Models;
 using System.Configuration;
 using System.Net;
 using System.Net.Http;
@@ -19,7 +17,7 @@ namespace QuickbooksApi.Controllers
 
         public InvoiceController(
             IInvoiceRepository repository, IApiDataProvider provider,
-            IJsonToModelBuilder builder): base(provider, builder)
+            IJsonToModelBuilder builder, IApiModelToEntityModelBuilder entityBuilder): base(provider, builder, entityBuilder)
         {
             _repository = repository;
         }
@@ -64,6 +62,7 @@ namespace QuickbooksApi.Controllers
         [HttpPost]
         public async Task<ActionResult> DownloadInvoice(string id)
         {
+            Logger.WriteDebug("Downloading invoice.");
             var invoiceId = WebUtility.UrlEncode(id);
             var qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];
             var realmId = Session["realmId"].ToString();

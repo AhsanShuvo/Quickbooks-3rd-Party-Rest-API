@@ -2,7 +2,7 @@
 
 namespace QuickbooksApi.Models
 {
-    public class AccountInfo : BaseModel
+    public class AccountModel : BaseModel
     {
         [JsonProperty("Name")]
         public string Name { get; set; }
@@ -25,6 +25,6 @@ namespace QuickbooksApi.Models
     public class AccountApiModel : BaseApiModel
     {
         [JsonProperty("Account")]
-        public AccountInfo Account { get; set; }
+        public AccountModel Account { get; set; }
     }
 }

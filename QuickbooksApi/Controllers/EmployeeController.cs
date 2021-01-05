@@ -15,7 +15,7 @@ namespace QuickbooksApi.Controllers
 
         public EmployeeController(
             IEmployeeRepository repository, IApiDataProvider provider,
-            IJsonToModelBuilder builder): base(provider, builder)
+            IJsonToModelBuilder builder, IApiModelToEntityModelBuilder entityBuilder): base(provider, builder, entityBuilder)
         {
             _repository = repository;
         }
@@ -31,30 +31,26 @@ namespace QuickbooksApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateEmployee(EmployeeInfo model)
+        public async Task<ActionResult> CreateEmployee(EmployeeModel model)
         {
             Logger.WriteDebug("Creating new employee");
-            EmployeeInfo employee = new EmployeeInfo()
-            {
-                GivenName = model.GivenName,
-                FamilyName = model.DisplayName,
-                Active = model.Active
-            };
-            var requestBody = new StringContent(JsonConvert.SerializeObject(employee), Encoding.UTF8, "application/json");
+            var requestBody = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var employeeObject = await HandlePostRequest(requestBody, EntityType.Employee.ToString().ToLower());
-            EmployeeInfo customerInfo = _builder.GetEmployeeModel(employeeObject);
-            _repository.SaveEmployeeInfo(customerInfo);
-
+            var employeeModel = _builder.GetEmployeeModel(employeeObject);
+            var employeeEntityModel = _entityBuilder.GetEmployeeEntityModel(employeeModel);
+            _repository.SaveEmployeeInfo(employeeEntityModel);
             return RedirectToAction("Index");
         }
 
         public async Task<ActionResult> EmployeeDetails()
         {
+            Logger.WriteDebug("Getting employee details from quickbooks online.");
             var employeeId = "77";
             var employeeObject = await HandleGetRequest(employeeId, EntityType.Employee.ToString().ToLower());
-            EmployeeInfo employee = _builder.GetEmployeeModel(employeeObject);
-            _repository.SaveEmployeeInfo(employee);
-            return View(employee);
+            var employeeModel = _builder.GetEmployeeModel(employeeObject);
+            var employeeEntityModel = _entityBuilder.GetEmployeeEntityModel(employeeModel);
+            _repository.SaveEmployeeInfo(employeeEntityModel);
+            return View(employeeModel);
         }
     }
 }

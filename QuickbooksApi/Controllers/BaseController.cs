@@ -11,11 +11,14 @@ namespace QuickbooksApi.Controllers
     {
         protected IApiDataProvider _provider;
         protected IJsonToModelBuilder _builder;
+        protected IApiModelToEntityModelBuilder _entityBuilder;
 
-        public BaseController( IApiDataProvider provider, IJsonToModelBuilder builder)
+        public BaseController(
+            IApiDataProvider provider, IJsonToModelBuilder builder, IApiModelToEntityModelBuilder entityBuilder)
         {
             _provider = provider;
             _builder = builder;
+            _entityBuilder = entityBuilder;
         }
 
         protected string _qboBaseUrl = ConfigurationManager.AppSettings["baseUrl"];

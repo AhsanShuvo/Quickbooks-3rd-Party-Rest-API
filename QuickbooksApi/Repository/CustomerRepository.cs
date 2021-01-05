@@ -1,8 +1,8 @@
 ﻿using QuickbooksApi.Helper;
 using QuickbooksApi.Interfaces;
-using QuickbooksApi.Models;
 using System;
-using System.Data.SqlClient;
+using System.Data.Entity;
+using System.Linq;
 
 namespace QuickbooksApi.Repository
 {
@@ -11,66 +11,46 @@ namespace QuickbooksApi.Repository
         public void SaveCustomerDetails(CustomerInfo model)
         {
             Logger.WriteDebug("Connecting to database server to insert/update customerinfo.");
-            using(SqlConnection con = new SqlConnection(connectionString))
+            try
             {
-                var qry = @"IF EXISTS(SELECT * FROM CustomerInfo WHERE Id =@Id )
-                              BEGIN        
-                                    UPDATE CustomerInfo 
-                                    SET DisplayName = @DisplayName, CompanyName = @CompanyName, Balance = @Balance, SyncToken = @SyncToken, Active = @Active
-                                    WHERE Id = @Id
-                               END
-                         ELSE
-                            BEGIN
-                                INSERT INTO CustomerInfo(Id, DisplayName, CompanyName, Balance, SyncToken, Active)
-                                VALUES(@Id, @DisplayName, @CompanyName, @Balance, @SyncToken, @Active)
-                            END";
-                SqlCommand cmd = new SqlCommand(qry, con);
-                cmd.Parameters.AddWithValue("@Id", model.Id);
-                cmd.Parameters.AddWithValue("@DisplayName", model.DisplayName);
-                cmd.Parameters.AddWithValue("@CompanyName", model.CompanyName);
-                cmd.Parameters.AddWithValue("@Balance", model.Balance);
-                cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
-                cmd.Parameters.AddWithValue("@Active", model.Active);
-                try
+                using(var ctx = new Entities())
                 {
-                    con.Open();
-                    cmd.ExecuteNonQuery();
+                    var id = model.Id;
+                    if (ctx.CustomerInfoes.Any(e => e.Id == id))
+                    {
+                        ctx.Entry(model).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        ctx.Entry(model).State = EntityState.Added;
+                    }
+                    ctx.SaveChanges();
+                    Logger.WriteDebug("Saved CustomerDetails successully.");
                 }
-                catch(Exception e)
-                {
-                    Logger.WriteError(e, "Failed to connect to database to insert/update customerinfo.");
-                    throw e;
-                }
-                finally
-                {
-                    con.Close();
-                }
+            }
+            catch(Exception e)
+            {
+                Logger.WriteError(e, "Failed to connect to the database.");
             }
         }
 
         public void DeleteCustomer(string id)
         {
-            using(SqlConnection con = new SqlConnection(connectionString))
+            Logger.WriteDebug("Connecting to the database to delete customer info.");
+            try
             {
-                Logger.WriteDebug("Connecting to database server to delete customerinfo.");
-                var qry = "DELETE FROM CustomerInfo WHERE Id = @Id";
-
-                SqlCommand cmd = new SqlCommand(qry, con);
-                cmd.Parameters.AddWithValue("@Id", id);
-                try
+                using(var ctx = new Entities())
                 {
-                    con.Open();
-                    cmd.ExecuteNonQuery();
+                    var customer = ctx.CustomerInfoes.Find(id);
+                    ctx.CustomerInfoes.Attach(customer);
+                    ctx.CustomerInfoes.Remove(customer);
+                    ctx.SaveChanges();
                 }
-                catch(Exception e)
-                {
-                    Logger.WriteError(e, "Failed to connect to database server to delete customerinfo");
-                    throw e;
-                }
-                finally
-                {
-                    con.Close();
-                }
+                Logger.WriteDebug("Deleted customer info successfully.");
+            }
+            catch(Exception e)
+            {
+                Logger.WriteError(e, "Failed to connect to database to delete customer info");
             }
         }
     }

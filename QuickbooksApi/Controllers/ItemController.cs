@@ -15,7 +15,7 @@ namespace QuickbooksApi.Controllers
 
         public ItemController(
             IItemRepository repository, IApiDataProvider provider,
-            IJsonToModelBuilder builder): base(provider, builder)
+            IJsonToModelBuilder builder, IApiModelToEntityModelBuilder entityBuilder): base(provider, builder, entityBuilder)
         {
             _repository = repository;
         }
@@ -31,34 +31,25 @@ namespace QuickbooksApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateItem(ItemInfo model)
+        public async Task<ActionResult> CreateItem(ItemModel model)
         {
             Logger.WriteDebug("Creating new item.");
-            ItemInfo item = new ItemInfo()
-            {
-                Name = model.Name,
-                Type = model.Type,
-                Active = model.Active,
-                UnitPrice = model.UnitPrice,
-                QtyOnHand = model.QtyOnHand,
-                PurchaseCost = model.PurchaseCost
-            };
-
-            item.IncomeAccountRef = new IncomeAccount()
+            model.IncomeAccountRef = new IncomeAccount()
             {
                 name = "Sales of Product Income",
                 value = "79"
             };
-            item.ExpenseAccountRef = new ExpenseAccount()
+            model.ExpenseAccountRef = new ExpenseAccount()
             {
                 name = "Cost of Goods Sold",
                 value = "80"
             };
 
-            var requestBody = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json");
+            var requestBody = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var itemObj = await HandlePostRequest(requestBody, EntityType.Item.ToString().ToLower());
-            ItemInfo itemInfo = _builder.GetItemModel(itemObj);
-            _repository.SaveItemInfo(itemInfo);
+            ItemModel itemModel = _builder.GetItemModel(itemObj);
+            var itemEntityModel = _entityBuilder.GetItemEntityModel(itemModel);
+            _repository.SaveItemInfo(itemEntityModel);
 
             return RedirectToAction("Index");
         }
@@ -69,9 +60,9 @@ namespace QuickbooksApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateCategory(CategoryInfo model)
+        public async Task<ActionResult> CreateCategory(CategoryModel model)
         {
-            var category = new CategoryInfo()
+            var category = new CategoryModel()
             {
                 Name = model.Name,
                 Type = "Category",
@@ -80,9 +71,9 @@ namespace QuickbooksApi.Controllers
             };
             var requestBody = new StringContent(JsonConvert.SerializeObject(category), Encoding.UTF8, "application/json");
             var categoryObj = await HandlePostRequest(requestBody, EntityType.Item.ToString().ToLower(), "4");
-            ItemInfo categoryInfo = _builder.GetItemModel(categoryObj);
-            _repository.SaveCategoryInfo(categoryInfo);
-
+            ItemModel categoryModel = _builder.GetItemModel(categoryObj);
+            ItemInfo categoryEntityModel = _entityBuilder.GetCategoryEntityModel(categoryModel);
+            _repository.SaveCategoryInfo(categoryEntityModel);
             return RedirectToAction("Index");
         }
 
@@ -90,18 +81,20 @@ namespace QuickbooksApi.Controllers
         {
             string bundleId = "28";
             var itemObj = await HandleGetRequest(bundleId, EntityType.Item.ToString().ToLower());
-            ItemInfo item = _builder.GetItemModel(itemObj);
-            _repository.SaveItemInfo(item);
-            return View(item);
+            ItemModel itemModel = _builder.GetItemModel(itemObj);
+            var itemEntityModel = _entityBuilder.GetItemEntityModel(itemModel);
+            _repository.SaveItemInfo(itemEntityModel);
+            return View(itemModel);
         }
 
         public async Task<ActionResult> CategoryDetails()
         {
             string categoryId = "27";
             var categoryObj = await HandleGetRequest(categoryId, EntityType.Item.ToString().ToLower());
-            var category = _builder.GetItemModel(categoryObj);
-            _repository.SaveCategoryInfo(category);
-            return View(category);
+            var categoryModel = _builder.GetItemModel(categoryObj);
+            var categoryEntityModel = _entityBuilder.GetCategoryEntityModel(categoryModel);
+            _repository.SaveCategoryInfo(categoryEntityModel);
+            return View(categoryModel);
         }
 
         public ActionResult UpdateCategory()
@@ -112,7 +105,7 @@ namespace QuickbooksApi.Controllers
         [HttpPost]
         public async Task<ActionResult> UpdateCategory(string name, string syncToken)
         {
-            var category = new CategoryInfo()
+            var category = new CategoryModel()
             {
                 Id = "27",
                 Name = name,
@@ -122,8 +115,9 @@ namespace QuickbooksApi.Controllers
             };
             var requestBody = new StringContent(JsonConvert.SerializeObject(category), Encoding.UTF8, "application/json");
             var categoryObj = await HandlePostRequest(requestBody, EntityType.Item.ToString().ToLower(), "4");
-            ItemInfo categoryInfo = _builder.GetItemModel(categoryObj);
-            _repository.SaveCategoryInfo(categoryInfo);
+            ItemModel categoryModel = _builder.GetItemModel(categoryObj);
+            var categoryEntityModel = _entityBuilder.GetCategoryEntityModel(categoryModel);
+            _repository.SaveCategoryInfo(categoryEntityModel);
             return RedirectToAction("Index");
         }
     }

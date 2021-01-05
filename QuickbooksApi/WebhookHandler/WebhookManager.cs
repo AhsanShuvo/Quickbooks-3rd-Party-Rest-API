@@ -25,12 +25,13 @@ namespace QuickbooksApi.Webhookhandler
         private IPaymentRepository _paymentRepo;
         private IVendorRepository _vendorRepo;
         private IJsonToModelBuilder _builder;
+        private IApiModelToEntityModelBuilder _entityBuilder;
 
         public WebhookManager(
             IUserRepository user, IApiDataProvider provider, IAccountRepository accountRepo,
             ICompanyRepository companyRepo, ICustomerRepository customerRepo, IEmployeeRepository employeeRepo,
             IInvoiceRepository invoiceRepo, IItemRepository itemRepo, IPaymentRepository paymentRepo,
-            IVendorRepository vendorRepo, IJsonToModelBuilder builder)
+            IVendorRepository vendorRepo, IJsonToModelBuilder builder, IApiModelToEntityModelBuilder entityBuilder)
         {
             _user = user;
             _provider = provider;
@@ -43,6 +44,7 @@ namespace QuickbooksApi.Webhookhandler
             _paymentRepo = paymentRepo;
             _vendorRepo = vendorRepo;
             _builder = builder;
+            _entityBuilder = entityBuilder;
         }
 
         private string _hashKey = ConfigurationManager.AppSettings["intuit-signature"];
@@ -112,14 +114,16 @@ namespace QuickbooksApi.Webhookhandler
                 }
                 else
                 {
-                    AccountInfo account = _builder.GetAccountModel(data);
-                    _accountRepo.SaveAccountInfo(account);
+                    AccountModel accountModel = _builder.GetAccountModel(data);
+                    var accountEntityModel = _entityBuilder.GetAccountEntityModel(accountModel);
+                    _accountRepo.SaveAccountInfo(accountEntityModel);
                 }
             }
             else if(model.Name.Equals(EntityType.Company.ToString()))
             {
-                CompanyInfo company = _builder.GetCompanyModel(data);
-                _companyRepo.SaveCompanyDetails(company);
+                CompanyModel companyModel = _builder.GetCompanyModel(data);
+                var companyEntityModel = _entityBuilder.GetCompanyEntityModel(companyModel);
+                _companyRepo.SaveCompanyDetails(companyEntityModel);
             }
             else if(model.Name.Equals(EntityType.Customer.ToString()))
             {
@@ -129,8 +133,9 @@ namespace QuickbooksApi.Webhookhandler
                 }
                 else
                 {
-                    CustomerInfo customer = _builder.GetCustomerModel(data);
-                    _customerRepo.SaveCustomerDetails(customer);
+                    var customerModel = _builder.GetCustomerModel(data);
+                    var customerEntityModel = _entityBuilder.GetCustomerEntityModel(customerModel);
+                    _customerRepo.SaveCustomerDetails(customerEntityModel);
                 }
             }
             else if(model.Name.Equals(EntityType.Payment.ToString()))
@@ -141,8 +146,9 @@ namespace QuickbooksApi.Webhookhandler
                 }
                 else
                 {
-                    PaymentInfo payment = _builder.GetPaymentModel(data);
-                    _paymentRepo.SavePaymentInfo(payment);
+                    var paymentModel = _builder.GetPaymentModel(data);
+                    var paymentEntityModel = _entityBuilder.GetPaymentEntityModel(paymentModel);
+                    _paymentRepo.SavePaymentInfo(paymentEntityModel);
                 }
             }
             else if(model.Name.Equals(EntityType.Vendor.ToString()))
@@ -153,8 +159,9 @@ namespace QuickbooksApi.Webhookhandler
                 }
                 else
                 {
-                    VendorInfo vendor = _builder.GetVendorModel(data);
-                    _vendorRepo.SaveVendorInfo(vendor);
+                    var vendorModel = _builder.GetVendorModel(data);
+                    var vendorEntityModel = _entityBuilder.GetVendorEntityModel(vendorModel);
+                    _vendorRepo.SaveVendorInfo(vendorEntityModel);
                 }
             }
             else if(model.Name.Equals(EntityType.Item.ToString()))
@@ -165,14 +172,16 @@ namespace QuickbooksApi.Webhookhandler
                 }
                 else
                 {
-                    ItemInfo item = _builder.GetItemModel(data);
+                    var item = _builder.GetItemModel(data);
                     if(item.Type.Equals("Category"))
                     {
-                        _itemRepo.SaveCategoryInfo(item);
+                        var categoryEntityModel = _entityBuilder.GetCategoryEntityModel(item);
+                        _itemRepo.SaveCategoryInfo(categoryEntityModel);
                     }
                     else
                     {
-                        _itemRepo.SaveItemInfo(item);
+                        var itemEntityModel = _entityBuilder.GetItemEntityModel(item);
+                        _itemRepo.SaveItemInfo(itemEntityModel);
                     } 
                 }
             }
@@ -184,8 +193,9 @@ namespace QuickbooksApi.Webhookhandler
                 }
                 else
                 {
-                    EmployeeInfo employee = _builder.GetEmployeeModel(data);
-                    _employeeRepo.SaveEmployeeInfo(employee);
+                    var employee = _builder.GetEmployeeModel(data);
+                    var employeeEntityModel = _entityBuilder.GetEmployeeEntityModel(employee);
+                    _employeeRepo.SaveEmployeeInfo(employeeEntityModel);
                 }
             }
             else if (model.Name.Equals(EntityType.Invoice.ToString()))
@@ -196,8 +206,9 @@ namespace QuickbooksApi.Webhookhandler
                 }
                 else
                 {
-                    InvoiceInfo invoice = _builder.GetInvoice(data);
-                    _invoiceRepo.SaveInvoiceInfo(invoice);
+                    var invoice = _builder.GetInvoice(data);
+                    //var invoiceEntityModel = _entityBuilder.GetInvoiceEntityModel(invoice);
+                    //_invoiceRepo.SaveInvoiceInfo(invoiceentityModel);
                 }
             }
         }

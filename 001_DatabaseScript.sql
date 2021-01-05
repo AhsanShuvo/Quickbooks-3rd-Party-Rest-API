@@ -34,8 +34,8 @@ IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblNam
 			CompanyName NVARCHAR(200),
 			Balance FLOAT,
 			SyncToken NVARCHAR(20),
-			Active INT	
-		)
+			Active BIT
+	)
 	END
 
 SET @tblName = 'VendorInfo'
@@ -47,7 +47,7 @@ IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblNam
 			CompanyName NVARCHAR(200),
 			Balance FLOAT,
 			SyncToken NVARCHAR(20),
-			Active INT
+			Active BIT
 		)
 	END
 
@@ -59,7 +59,7 @@ IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblNam
 			GivenName NVARCHAR(50),
 			FamilyName NVARCHAR(50),
 			DisplayName NVARCHAR(200),
-			Active INT,
+			Active BIT,
 			SyncToken NVARCHAR(20)
 		)
 	END
@@ -85,7 +85,7 @@ IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblNam
 			UnitPrice FLOAT,
 			PurchaseCost FLOAT,
 			QtyOnHand FLOAT,
-			Active INT,
+			Active BIT,
 			SyncToken NVARCHAR(20)
 		)
 	END
@@ -97,7 +97,7 @@ IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblNam
 			Id NVARCHAR(20) PRIMARY KEY,
 			[Name] NVARCHAR(100),
 			[Type] NVARCHAR(100),
-			Active INT,
+			Active BIT,
 			SyncToken NVARCHAR(20)
 		)
 	END
@@ -150,5 +150,3 @@ IF NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @tblNam
 			TxnDate NVARCHAR(30)
 		)
 	END
-
-SELECT * FROM InvoiceInfo

@@ -1,0 +1,429 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="QuickbooksModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AccountInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="AccountType" Type="nvarchar(max)" />
+          <Property Name="Classification" Type="nvarchar" MaxLength="100" />
+          <Property Name="CurrentBalance" Type="float" />
+          <Property Name="SyncToken" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="BillInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="SyncToken" Type="nvarchar" MaxLength="20" />
+          <Property Name="TxnDate" Type="nvarchar" MaxLength="50" />
+          <Property Name="TotalAmt" Type="float" />
+          <Property Name="DueDate" Type="nvarchar" MaxLength="50" />
+          <Property Name="Balance" Type="float" />
+          <Property Name="VendorRef" Type="nvarchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="CategoryInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Type" Type="nvarchar" MaxLength="100" />
+          <Property Name="Active" Type="bit" />
+          <Property Name="SyncToken" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="CompanyInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CompanyName" Type="nvarchar" MaxLength="200" />
+          <Property Name="CompanyStartDate" Type="nvarchar" MaxLength="200" />
+          <Property Name="SyncToken" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="CustomerInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="200" />
+          <Property Name="CompanyName" Type="nvarchar" MaxLength="200" />
+          <Property Name="Balance" Type="float" />
+          <Property Name="SyncToken" Type="nvarchar" MaxLength="20" />
+          <Property Name="Active" Type="bit" />
+        </EntityType>
+        <EntityType Name="EmployeeInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="GivenName" Type="nvarchar" MaxLength="50" />
+          <Property Name="FamilyName" Type="nvarchar" MaxLength="50" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="200" />
+          <Property Name="Active" Type="bit" />
+          <Property Name="SyncToken" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="InvoiceInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="TotalAmt" Type="float" />
+          <Property Name="SyncToken" Type="nvarchar" MaxLength="10" />
+          <Property Name="CustomerId" Type="nvarchar" MaxLength="30" />
+          <Property Name="TxnDate" Type="nvarchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="ItemInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="Type" Type="nvarchar" MaxLength="100" />
+          <Property Name="UnitPrice" Type="float" />
+          <Property Name="PurchaseCost" Type="float" />
+          <Property Name="QtyOnHand" Type="float" />
+          <Property Name="Active" Type="bit" />
+          <Property Name="SyncToken" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="PaymentInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="TotalAmt" Type="float" />
+          <Property Name="SyncToken" Type="nvarchar" MaxLength="20" />
+          <Property Name="CustomerRef" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="UserInfo">
+          <Key>
+            <PropertyRef Name="RealmId" />
+          </Key>
+          <Property Name="RealmId" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="AccessToken" Type="nvarchar(max)" />
+          <Property Name="RefreshToken" Type="nvarchar(max)" />
+          <Property Name="AccessTokenExpiresIn" Type="datetime" />
+          <Property Name="RefreshTokenExpiresIn" Type="datetime" />
+        </EntityType>
+        <EntityType Name="VendorInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="200" />
+          <Property Name="CompanyName" Type="nvarchar" MaxLength="200" />
+          <Property Name="Balance" Type="float" />
+          <Property Name="SyncToken" Type="nvarchar" MaxLength="20" />
+          <Property Name="Active" Type="bit" />
+        </EntityType>
+        <EntityContainer Name="QuickbooksModelStoreContainer">
+          <EntitySet Name="AccountInfo" EntityType="Self.AccountInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BillInfo" EntityType="Self.BillInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CategoryInfo" EntityType="Self.CategoryInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CompanyInfo" EntityType="Self.CompanyInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomerInfo" EntityType="Self.CustomerInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmployeeInfo" EntityType="Self.EmployeeInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InvoiceInfo" EntityType="Self.InvoiceInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemInfo" EntityType="Self.ItemInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentInfo" EntityType="Self.PaymentInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VendorInfo" EntityType="Self.VendorInfo" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="QuickbooksModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AccountInfoes" EntityType="QuickbooksModel.AccountInfo" />
+          <EntitySet Name="BillInfoes" EntityType="QuickbooksModel.BillInfo" />
+          <EntitySet Name="CategoryInfoes" EntityType="QuickbooksModel.CategoryInfo" />
+          <EntitySet Name="CompanyInfoes" EntityType="QuickbooksModel.CompanyInfo" />
+          <EntitySet Name="CustomerInfoes" EntityType="QuickbooksModel.CustomerInfo" />
+          <EntitySet Name="EmployeeInfoes" EntityType="QuickbooksModel.EmployeeInfo" />
+          <EntitySet Name="InvoiceInfoes" EntityType="QuickbooksModel.InvoiceInfo" />
+          <EntitySet Name="ItemInfoes" EntityType="QuickbooksModel.ItemInfo" />
+          <EntitySet Name="PaymentInfoes" EntityType="QuickbooksModel.PaymentInfo" />
+          <EntitySet Name="UserInfoes" EntityType="QuickbooksModel.UserInfo" />
+          <EntitySet Name="VendorInfoes" EntityType="QuickbooksModel.VendorInfo" />
+        </EntityContainer>
+        <EntityType Name="AccountInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="AccountType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Classification" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CurrentBalance" Type="Double" />
+          <Property Name="SyncToken" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="BillInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SyncToken" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TxnDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TotalAmt" Type="Double" />
+          <Property Name="DueDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Balance" Type="Double" />
+          <Property Name="VendorRef" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CategoryInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" />
+          <Property Name="SyncToken" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CompanyInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyStartDate" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="SyncToken" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CustomerInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DisplayName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Balance" Type="Double" />
+          <Property Name="SyncToken" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="EmployeeInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="GivenName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FamilyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DisplayName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" />
+          <Property Name="SyncToken" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="InvoiceInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="TotalAmt" Type="Double" />
+          <Property Name="SyncToken" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerId" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="TxnDate" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ItemInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UnitPrice" Type="Double" />
+          <Property Name="PurchaseCost" Type="Double" />
+          <Property Name="QtyOnHand" Type="Double" />
+          <Property Name="Active" Type="Boolean" />
+          <Property Name="SyncToken" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PaymentInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TotalAmt" Type="Double" />
+          <Property Name="SyncToken" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerRef" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="UserInfo">
+          <Key>
+            <PropertyRef Name="RealmId" />
+          </Key>
+          <Property Name="RealmId" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AccessToken" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RefreshToken" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AccessTokenExpiresIn" Type="DateTime" Precision="3" />
+          <Property Name="RefreshTokenExpiresIn" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="VendorInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DisplayName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Balance" Type="Double" />
+          <Property Name="SyncToken" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="QuickbooksModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="AccountInfoes">
+            <EntityTypeMapping TypeName="QuickbooksModel.AccountInfo">
+              <MappingFragment StoreEntitySet="AccountInfo">
+                <ScalarProperty Name="SyncToken" ColumnName="SyncToken" />
+                <ScalarProperty Name="CurrentBalance" ColumnName="CurrentBalance" />
+                <ScalarProperty Name="Classification" ColumnName="Classification" />
+                <ScalarProperty Name="AccountType" ColumnName="AccountType" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BillInfoes">
+            <EntityTypeMapping TypeName="QuickbooksModel.BillInfo">
+              <MappingFragment StoreEntitySet="BillInfo">
+                <ScalarProperty Name="VendorRef" ColumnName="VendorRef" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="TotalAmt" ColumnName="TotalAmt" />
+                <ScalarProperty Name="TxnDate" ColumnName="TxnDate" />
+                <ScalarProperty Name="SyncToken" ColumnName="SyncToken" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CategoryInfoes">
+            <EntityTypeMapping TypeName="QuickbooksModel.CategoryInfo">
+              <MappingFragment StoreEntitySet="CategoryInfo">
+                <ScalarProperty Name="SyncToken" ColumnName="SyncToken" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CompanyInfoes">
+            <EntityTypeMapping TypeName="QuickbooksModel.CompanyInfo">
+              <MappingFragment StoreEntitySet="CompanyInfo">
+                <ScalarProperty Name="SyncToken" ColumnName="SyncToken" />
+                <ScalarProperty Name="CompanyStartDate" ColumnName="CompanyStartDate" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerInfoes">
+            <EntityTypeMapping TypeName="QuickbooksModel.CustomerInfo">
+              <MappingFragment StoreEntitySet="CustomerInfo">
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="SyncToken" ColumnName="SyncToken" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmployeeInfoes">
+            <EntityTypeMapping TypeName="QuickbooksModel.EmployeeInfo">
+              <MappingFragment StoreEntitySet="EmployeeInfo">
+                <ScalarProperty Name="SyncToken" ColumnName="SyncToken" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="FamilyName" ColumnName="FamilyName" />
+                <ScalarProperty Name="GivenName" ColumnName="GivenName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvoiceInfoes">
+            <EntityTypeMapping TypeName="QuickbooksModel.InvoiceInfo">
+              <MappingFragment StoreEntitySet="InvoiceInfo">
+                <ScalarProperty Name="TxnDate" ColumnName="TxnDate" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="SyncToken" ColumnName="SyncToken" />
+                <ScalarProperty Name="TotalAmt" ColumnName="TotalAmt" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemInfoes">
+            <EntityTypeMapping TypeName="QuickbooksModel.ItemInfo">
+              <MappingFragment StoreEntitySet="ItemInfo">
+                <ScalarProperty Name="SyncToken" ColumnName="SyncToken" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="QtyOnHand" ColumnName="QtyOnHand" />
+                <ScalarProperty Name="PurchaseCost" ColumnName="PurchaseCost" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentInfoes">
+            <EntityTypeMapping TypeName="QuickbooksModel.PaymentInfo">
+              <MappingFragment StoreEntitySet="PaymentInfo">
+                <ScalarProperty Name="CustomerRef" ColumnName="CustomerRef" />
+                <ScalarProperty Name="SyncToken" ColumnName="SyncToken" />
+                <ScalarProperty Name="TotalAmt" ColumnName="TotalAmt" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserInfoes">
+            <EntityTypeMapping TypeName="QuickbooksModel.UserInfo">
+              <MappingFragment StoreEntitySet="UserInfo">
+                <ScalarProperty Name="RefreshTokenExpiresIn" ColumnName="RefreshTokenExpiresIn" />
+                <ScalarProperty Name="AccessTokenExpiresIn" ColumnName="AccessTokenExpiresIn" />
+                <ScalarProperty Name="RefreshToken" ColumnName="RefreshToken" />
+                <ScalarProperty Name="AccessToken" ColumnName="AccessToken" />
+                <ScalarProperty Name="RealmId" ColumnName="RealmId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VendorInfoes">
+            <EntityTypeMapping TypeName="QuickbooksModel.VendorInfo">
+              <MappingFragment StoreEntitySet="VendorInfo">
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="SyncToken" ColumnName="SyncToken" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

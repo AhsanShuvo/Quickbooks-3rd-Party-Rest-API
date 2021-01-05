@@ -15,7 +15,7 @@ namespace QuickbooksApi.Controllers
 
         public AccountController(
             IApiDataProvider provider, IAccountRepository repository, 
-            IJsonToModelBuilder builder) : base(provider, builder)
+            IJsonToModelBuilder builder, IApiModelToEntityModelBuilder entityBuilder) : base(provider, builder, entityBuilder)
         {
             _repository = repository;
         }
@@ -31,20 +31,14 @@ namespace QuickbooksApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateAccount(AccountInfo model)
+        public async Task<ActionResult> CreateAccount(AccountModel model)
         {
             Logger.WriteDebug("Creating new account.");
-            AccountInfo acct = new AccountInfo()
-            {
-                Name = model.Name,
-                AccountType = model.AccountType,
-                Classification = model.Classification,
-                CurrentBalance = model.CurrentBalance
-            };
-            var requestBody = new StringContent(JsonConvert.SerializeObject(acct), Encoding.UTF8, "application/json");
+            var requestBody = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var acctInfo = await HandlePostRequest(requestBody, EntityType.Account.ToString().ToLower());
-            AccountInfo accountInfo = _builder.GetAccountModel(acctInfo);
-            _repository.SaveAccountInfo(accountInfo);
+            AccountModel accountModel = _builder.GetAccountModel(acctInfo);
+            AccountInfo accountEntityModel = _entityBuilder.GetAccountEntityModel(accountModel);
+            _repository.SaveAccountInfo(accountEntityModel);
 
             return RedirectToAction("Index");
         }
@@ -53,9 +47,10 @@ namespace QuickbooksApi.Controllers
         {
             Logger.WriteDebug("Showing account details.");
             var acctInfo = await HandleGetRequest("93", EntityType.Account.ToString().ToLower());
-            AccountInfo accountInfo = _builder.GetAccountModel(acctInfo);
-            _repository.SaveAccountInfo(accountInfo);
-            return View(accountInfo);
+            AccountModel accountModel = _builder.GetAccountModel(acctInfo);
+            AccountInfo accountEntityModel = _entityBuilder.GetAccountEntityModel(accountModel);
+            _repository.SaveAccountInfo(accountEntityModel);
+            return View(accountModel);
         }
 
         //To do

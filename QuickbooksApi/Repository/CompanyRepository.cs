@@ -1,8 +1,8 @@
 ﻿using QuickbooksApi.Helper;
 using QuickbooksApi.Interfaces;
-using QuickbooksApi.Models;
 using System;
-using System.Data.SqlClient;
+using System.Data.Entity;
+using System.Linq;
 
 namespace QuickbooksApi.Repository
 {
@@ -11,39 +11,27 @@ namespace QuickbooksApi.Repository
         public void SaveCompanyDetails(CompanyInfo model)
         {
             Logger.WriteDebug("Connecting to database server to update companyinfo.");
-            using (SqlConnection con = new SqlConnection(connectionString))
+            try
             {
-                var qry = @"IF EXISTS(SELECT * FROM CompanyInfo WHERE Id = @Id)
-                                BEGIN
-                                    UPDATE CompanyInfo
-                                    SET CompanyName = @CompanyName, CompanyStartDate = @CompanyStartDate, SyncToken = @SyncToken
-                                    WHERE Id = @Id
-                                END
-                            ELSE
-                                BEGIN
-                                    INSERT INTO CompanyInfo(Id, CompanyName, CompanyStartDate, SyncToken)
-                                    VALUES(@Id, @CompanyName, @CompanyStartDate, @SyncToken)
-                                END";
-
-                SqlCommand cmd = new SqlCommand(qry, con);
-                cmd.Parameters.AddWithValue("@id", model.Id);
-                cmd.Parameters.AddWithValue("@Name", model.CompanyName);
-                cmd.Parameters.AddWithValue("@AccountType", model.CompanyStartDate);
-                cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
-                try
+                using (var ctx = new Entities())
                 {
-                    con.Open();
-                    cmd.ExecuteNonQuery();
+                    var id = model.Id;
+                    if (ctx.CompanyInfoes.Any(e => e.Id == id))
+                    {
+                        ctx.Entry(model).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        ctx.Entry(model).State = EntityState.Added;
+                    }
+                    ctx.SaveChanges();
+                    Logger.WriteDebug("Saved company info successfully.");
                 }
-                catch(Exception e)
-                {
-                    Logger.WriteError(e, "Failed to connect to database server to update companyinfo.");
-                    throw e;
-                }
-                finally
-                {
-                    con.Close();
-                }
+            }
+            catch(Exception e)
+            {
+                Logger.WriteError(e, "Unable to connect to database.");
+                throw e;
             }
         }
     }

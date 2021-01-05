@@ -2,7 +2,7 @@
 
 namespace QuickbooksApi.Models
 {
-    public class EmployeeInfo : BaseModel
+    public class EmployeeModel : BaseModel
     {
         [JsonProperty("DisplayName")]
         public string DisplayName { get; set; }
@@ -20,6 +20,6 @@ namespace QuickbooksApi.Models
     public class EmployeeApiModel : BaseApiModel
     {
         [JsonProperty("Employee")]
-        public EmployeeInfo Employee { get; set; }
+        public EmployeeModel Employee { get; set; }
     }
 }

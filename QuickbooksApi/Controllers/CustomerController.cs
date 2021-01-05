@@ -15,7 +15,7 @@ namespace QuickbooksApi.Controllers
 
         public CustomerController(
             ICustomerRepository repository, IApiDataProvider provider,
-            IJsonToModelBuilder builder): base(provider, builder)
+            IJsonToModelBuilder builder, IApiModelToEntityModelBuilder entityBuilder): base(provider, builder, entityBuilder)
         {
             _repository = repository;
         }
@@ -31,28 +31,24 @@ namespace QuickbooksApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateCustomer(CustomerInfo model)
+        public async Task<ActionResult> CreateCustomer(CustomerModel model)
         {
             Logger.WriteDebug("Creating new customer");
-            var customer = new CustomerInfo {
-                DisplayName =model.DisplayName,
-                CompanyName = model.CompanyName,
-                Balance = model.Balance,
-                Active = model.Active
-            };
-            var requestBody = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8, "application/json");
+            var requestBody = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var customerObject = await HandlePostRequest(requestBody, EntityType.Customer.ToString().ToLower());
-            CustomerInfo customerInfo = _builder.GetCustomerModel(customerObject);
-            _repository.SaveCustomerDetails(customerInfo);
+            CustomerModel customerModel = _builder.GetCustomerModel(customerObject);
+            CustomerInfo customerEntityModel = _entityBuilder.GetCustomerEntityModel(customerModel);
+            _repository.SaveCustomerDetails(customerEntityModel);
             return RedirectToRoute("Index");
         }
 
         public async Task<ActionResult> CustomerDetails()
         {
             var customerObject = await HandleGetRequest("68", EntityType.Customer.ToString().ToLower());
-            var customerInfo = _builder.GetCustomerModel(customerObject);
-            _repository.SaveCustomerDetails(customerInfo);
-            return View(customerInfo);
+            var customerModel = _builder.GetCustomerModel(customerObject);
+            var customerEntityModel = _entityBuilder.GetCustomerEntityModel(customerModel);
+            _repository.SaveCustomerDetails(customerEntityModel);
+            return View(customerModel);
         }
 
         public async Task<ActionResult> UpdateCustomer()
@@ -67,8 +63,9 @@ namespace QuickbooksApi.Controllers
 
             var requestBody = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8, "application/json");
             var customerObj = await HandlePostRequest(requestBody, EntityType.Customer.ToString().ToLower());
-            var customerInfo = _builder.GetCustomerModel(customerObj);
-            _repository.SaveCustomerDetails(customerInfo);
+            var customerModel = _builder.GetCustomerModel(customerObj);
+            var customerEntityModel = _entityBuilder.GetCustomerEntityModel(customerModel);
+            _repository.SaveCustomerDetails(customerEntityModel);
             return RedirectToAction("Index");
         }
     }

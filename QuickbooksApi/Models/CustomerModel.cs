@@ -2,7 +2,7 @@
 
 namespace QuickbooksApi.Models
 {
-    public class CustomerInfo : BaseModel
+    public class CustomerModel : BaseModel
     {
         [JsonProperty("Balance")]
         public double Balance { get; set; }
@@ -29,6 +29,6 @@ namespace QuickbooksApi.Models
     public class CustomerApiModel : BaseApiModel
     {
         [JsonProperty("Customer")]
-        public CustomerInfo Customer { get; set; }
+        public CustomerModel Customer { get; set; }
     }
 }

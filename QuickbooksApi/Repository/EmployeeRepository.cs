@@ -1,8 +1,8 @@
 ﻿using QuickbooksApi.Helper;
 using QuickbooksApi.Interfaces;
-using QuickbooksApi.Models;
 using System;
-using System.Data.SqlClient;
+using System.Data.Entity;
+using System.Linq;
 
 namespace QuickbooksApi.Repository
 {
@@ -11,65 +11,48 @@ namespace QuickbooksApi.Repository
         public void SaveEmployeeInfo(EmployeeInfo model)
         {
             Logger.WriteDebug("Connecting to database server to insert/update employeeinfo.");
-            using (SqlConnection con = new SqlConnection(connectionString))
+            try
             {
-                var qry = @"IF EXISTS(SELECT * FROM EmployeeInfo WHERE Id = @Id)
-                                BEGIN
-                                    UPDATE EmployeeInfo
-                                    SET GivenName = @GivenName, DisplayName = @DisplayName, Active = @Active, SyncToken = @SyncToken
-                                    WHERE Id = @Id
-                                END
-                            ELSE
-                                BEGIN
-                                    INSERT INTO EmployeeInfo(Id, GivenName, DisplayName, Active, SyncToken) 
-                                    VALUES(@Id, @GIvenName, @DisplayName, @Active, @SyncToken)
-                                END";
-
-                SqlCommand cmd = new SqlCommand(qry, con);
-                cmd.Parameters.AddWithValue("@Id", model.Id);
-                cmd.Parameters.AddWithValue("@GivenName", model.GivenName);
-                cmd.Parameters.AddWithValue("@DisplayName", model.DisplayName);
-                cmd.Parameters.AddWithValue("@Active", model.Active);
-                cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
-                try
+                using(var ctx = new Entities())
                 {
-                    con.Open();
-                    cmd.ExecuteNonQuery();
+                    var id = model.Id;
+                    if (ctx.EmployeeInfoes.Any(e => e.Id == id))
+                    {
+                        ctx.Entry(model).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        ctx.Entry(model).State = EntityState.Added;
+                    }
+                    ctx.SaveChanges();
                 }
-                catch(Exception e)
-                {
-                    Logger.WriteError(e, "Failed to connect to database to insert/update employeeinfo.");
-                    throw e;
-                }
-                finally
-                {
-                    con.Close();
-                }
+                Logger.WriteDebug("Saved employee info succesfully.");
+            }
+            catch(Exception e)
+            {
+                Logger.WriteError(e, "Failed to connect to the database to save to employee info.");
+                throw e;
             }
         }
 
         public void DeleteEmployee(string id)
         {
             Logger.WriteDebug("Connecting to database server to delete employeeinfo.");
-            using (SqlConnection con = new SqlConnection(connectionString))
+            try
             {
-                var qry = "DELETE FROM EmployeeInfo WHERE Id=@Id";
-                SqlCommand cmd = new SqlCommand(qry, con);
-                cmd.Parameters.AddWithValue("@Id", id);
-                try
+                using (var ctx = new Entities())
                 {
-                    con.Open();
-                    cmd.ExecuteNonQuery();
+                    var employee = ctx.EmployeeInfoes.Find(id);
+                    ctx.EmployeeInfoes.Attach(employee);
+                    ctx.EmployeeInfoes.Remove(employee);
+                    ctx.SaveChanges();
                 }
-                catch(Exception e)
-                {
-                    Logger.WriteError(e, "Failed to connect to database to delete employeeinfo.");
-                    throw e;
-                }
-                finally
-                {
-                    con.Close();
-                }
+                Logger.WriteDebug("Deleted employee info successfully");
+            }
+            catch(Exception e)
+            {
+                Logger.WriteError(e, "Failed to connect to the database to delete employee info");
+                throw e;
             }
         }
     }

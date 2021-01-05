@@ -2,7 +2,7 @@
 
 namespace QuickbooksApi.Models
 {
-    public class ItemInfo : BaseModel
+    public class ItemModel : BaseModel
     {
         [JsonProperty("Name")]
         public string Name { get; set; }
@@ -30,6 +30,6 @@ namespace QuickbooksApi.Models
     public class ItemApiModel : BaseApiModel
     {
         [JsonProperty("Item")]
-        public ItemInfo Item { get; set; }
+        public ItemModel Item { get; set; }
     }
 }

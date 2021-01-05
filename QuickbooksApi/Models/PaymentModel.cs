@@ -2,7 +2,7 @@
 
 namespace QuickbooksApi.Models
 {
-    public class PaymentInfo : BaseModel
+    public class PaymentModel : BaseModel
     {
         [JsonProperty("TotalAmt")]
         public double TotalAmt { get; set; }
@@ -17,6 +17,6 @@ namespace QuickbooksApi.Models
     public class PaymentApiModel : BaseApiModel
     {
         [JsonProperty("Payment")]
-        public PaymentInfo Payment { get; set; }
+        public PaymentModel Payment { get; set; }
     }
 }

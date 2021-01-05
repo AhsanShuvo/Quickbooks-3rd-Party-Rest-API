@@ -1,8 +1,8 @@
 ﻿using QuickbooksApi.Helper;
 using QuickbooksApi.Interfaces;
-using QuickbooksApi.Models;
 using System;
-using System.Data.SqlClient;
+using System.Data.Entity;
+using System.Linq;
 
 namespace QuickbooksApi.Repository
 {
@@ -11,66 +11,48 @@ namespace QuickbooksApi.Repository
         public void SaveAccountInfo(AccountInfo model)
         {
             Logger.WriteDebug("Connecting to the database server to insert/update account.");
-            using (SqlConnection con = new SqlConnection(connectionString))
+            try
             {
-                var qry = @"IF EXISTS(SELECT * FROM AccountInfo WHERE Id = @Id)
-                                BEGIN
-                                    UPDATE AccountInfo
-                                    SET Name = @Name, AccountType = @AccountType, Classification = @Classification, CurrentBalance = @CurrentBalance, SyncToken = @SyncToken
-                                    WHERE Id = @Id
-                                END
-                            ELSE
-                                BEGIN
-                                    INSERT INTO AccountInfo(Id, Name, AccountType, Classification, CurrentBalance, SyncToken)
-                                    VALUES(@Id, @Name, @AccountType, @Classification, @CurrentBalance, @SyncToken)
-                                END";
-
-                SqlCommand cmd = new SqlCommand(qry, con);
-                cmd.Parameters.AddWithValue("@id", model.Id);
-                cmd.Parameters.AddWithValue("@Name", model.Name);
-                cmd.Parameters.AddWithValue("@AccountType", model.AccountType);
-                cmd.Parameters.AddWithValue("@Classification", model.Classification);
-                cmd.Parameters.AddWithValue("@CurrentBalance", model.CurrentBalance);
-                cmd.Parameters.AddWithValue("@SyncToken", model.SyncToken);
-                try
+                using (var ctx = new Entities())
                 {
-                    con.Open();
-                    cmd.ExecuteNonQuery();
+                    var id = model.Id;
+                    if (ctx.AccountInfoes.Any(e => e.Id == id))
+                    {
+                        ctx.Entry(model).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        ctx.Entry(model).State = EntityState.Added;
+                    }
+                    ctx.SaveChanges();
                 }
-                catch(Exception e)
-                {
-                    Logger.WriteError(e, "Failed to connect to database.");
-                    throw e;
-                }
-                finally
-                {
-                    con.Close();
-                }
+                Logger.WriteDebug("Saved account info successfully.");
+            }
+            catch(Exception e)
+            {
+                Logger.WriteError(e, "Failed to connect to database to save account info.");
+                throw e;
             }
         }
 
         public void  DeleteAccountInfo(string id)
         {
-            using(SqlConnection con = new SqlConnection(connectionString))
+            Logger.WriteDebug("Connecting to database server to delete account.");
+            try
             {
-                Logger.WriteDebug("Connecting to database server to delete account.");
-                var qry = "DELETE FROM AccountInfo Where Id = @Id";
-                SqlCommand cmd = new SqlCommand(qry, con);
-                cmd.Parameters.AddWithValue("@Id", id);
-                try
+                using (var ctx = new Entities())
                 {
-                    con.Open();
-                    cmd.ExecuteNonQuery();
+                    var account = ctx.AccountInfoes.Find(id);
+                    ctx.AccountInfoes.Attach(account);
+                    ctx.AccountInfoes.Remove(account);
+                    ctx.SaveChanges();
                 }
-                catch(Exception e)
-                {
-                    Logger.WriteError(e, "Failed to connect to server to delete account.");
-                    throw e;
-                }
-                finally
-                {
-                    con.Close();
-                }
+                Logger.WriteDebug("Deleted account successfully");
+            }
+            catch(Exception e)
+            {
+                Logger.WriteError(e, "Failed to connect to database to delete account info.");
+                throw e;
             }
         }
     }

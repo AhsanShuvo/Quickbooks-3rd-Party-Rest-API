@@ -2,7 +2,7 @@
 
 namespace QuickbooksApi.Models
 {
-    public class InvoiceInfo : BaseModel
+    public class InvoiceModel : BaseModel
     {
         public double TotalAmt { get; set; }
         public CustomerReference CustomerRef { get; set; }
@@ -12,6 +12,6 @@ namespace QuickbooksApi.Models
 
     public class InvoiceApiModel : BaseApiModel
     {
-        public InvoiceInfo Invoice { get; set; }
+        public InvoiceModel Invoice { get; set; }
     }
 }

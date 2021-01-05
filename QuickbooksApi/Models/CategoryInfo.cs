@@ -1,6 +1,6 @@
 ﻿namespace QuickbooksApi.Models
 {
-    public class CategoryInfo : BaseModel
+    public class CategoryModel : BaseModel
     {
         public string Name { get; set; }
         public string Type { get; set; }

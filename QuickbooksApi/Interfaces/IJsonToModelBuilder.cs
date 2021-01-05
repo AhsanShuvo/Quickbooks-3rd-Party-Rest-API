@@ -4,13 +4,13 @@ namespace QuickbooksApi.Interfaces
 {
     public interface IJsonToModelBuilder
     {
-        CustomerInfo GetCustomerModel(string json);
-        AccountInfo GetAccountModel(string json);
-        EmployeeInfo GetEmployeeModel(string json);
-        CompanyInfo GetCompanyModel(string json);
-        VendorInfo GetVendorModel(string json);
-        ItemInfo GetItemModel(string json);
-        PaymentInfo GetPaymentModel(string json);
-        InvoiceInfo GetInvoice(string json);
+        CustomerModel GetCustomerModel(string json);
+        AccountModel GetAccountModel(string json);
+        EmployeeModel GetEmployeeModel(string json);
+        CompanyModel GetCompanyModel(string json);
+        VendorModel GetVendorModel(string json);
+        ItemModel GetItemModel(string json);
+        PaymentModel GetPaymentModel(string json);
+        InvoiceModel GetInvoice(string json);
     }
 }

@@ -15,7 +15,7 @@ namespace QuickbooksApi.Controllers
 
         public VendorController(
             IVendorRepository repository, IApiDataProvider provider,
-            IJsonToModelBuilder builder): base(provider, builder)
+            IJsonToModelBuilder builder, IApiModelToEntityModelBuilder entityBuilder): base(provider, builder, entityBuilder)
         {
             _repository = repository;
         }
@@ -31,22 +31,14 @@ namespace QuickbooksApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateVendor(VendorInfo model)
+        public async Task<ActionResult> CreateVendor(VendorModel model)
         {
             Logger.WriteDebug("Creating a new vendor.");
-            VendorInfo vendor = new VendorInfo()
-            {
-                DisplayName = model.DisplayName,
-                CompanyName = model.CompanyName,
-                Active = model.Active,
-                SyncToken = model.SyncToken,
-                Balance = model.Balance
-            };
-
-            var requestBody = new StringContent(JsonConvert.SerializeObject(vendor), Encoding.UTF8, "application/json");
+            var requestBody = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var vendorObject = await HandlePostRequest(requestBody, EntityType.Vendor.ToString().ToLower());
-            VendorInfo vendorInfo = _builder.GetVendorModel(vendorObject);
-            _repository.SaveVendorInfo(vendorInfo);
+            VendorModel vendorModel = _builder.GetVendorModel(vendorObject);
+            var vendorEntityModel = _entityBuilder.GetVendorEntityModel(vendorModel);
+            _repository.SaveVendorInfo(vendorEntityModel);
 
             return RedirectToAction("Index");
         }
@@ -54,9 +46,10 @@ namespace QuickbooksApi.Controllers
         public async Task<ActionResult> VendorDetails()
         {
             var vendorObject = await HandleGetRequest("71", EntityType.Vendor.ToString().ToLower());
-            var vendorInfo = _builder.GetVendorModel(vendorObject);
-            _repository.SaveVendorInfo(vendorInfo);
-            return View(vendorInfo);
+            var vendorModel = _builder.GetVendorModel(vendorObject);
+            var vendorEntityModel = _entityBuilder.GetVendorEntityModel(vendorModel);
+            _repository.SaveVendorInfo(vendorEntityModel);
+            return View(vendorModel);
         }
     }
 }

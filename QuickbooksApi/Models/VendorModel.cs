@@ -1,6 +1,6 @@
 ﻿namespace QuickbooksApi.Models
 {
-    public class VendorInfo : BaseModel
+    public class VendorModel : BaseModel
     {
         public string DisplayName { get; set; }
         public string CompanyName { get; set; }
@@ -10,6 +10,6 @@
 
     public class VendorApiModel : BaseApiModel
     {
-        public VendorInfo Vendor { get; set; }
+        public VendorModel Vendor { get; set; }
     }
 }

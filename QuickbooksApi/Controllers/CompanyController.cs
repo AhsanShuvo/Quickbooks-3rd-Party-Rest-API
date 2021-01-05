@@ -14,7 +14,7 @@ namespace QuickbooksApi.Controllers
 
         public CompanyController(
             ICompanyRepository repository, IApiDataProvider provider,
-            IJsonToModelBuilder builder) : base(provider, builder)
+            IJsonToModelBuilder builder, IApiModelToEntityModelBuilder entityBuilder) : base(provider, builder, entityBuilder)
         {
             _repository = repository;
         }
@@ -29,9 +29,10 @@ namespace QuickbooksApi.Controllers
             Logger.WriteDebug("Showing company details");
             var realmId = Session["realmId"].ToString();
             var companyObject = await HandleGetRequest(realmId, "companyinfo");
-            var companyInfo = _builder.GetCompanyModel(companyObject);
-            _repository.SaveCompanyDetails(companyInfo);
-            return View(companyInfo);
+            var companyModel = _builder.GetCompanyModel(companyObject);
+            CompanyInfo companyEntityModel = _entityBuilder.GetCompanyEntityModel(companyModel);
+            _repository.SaveCompanyDetails(companyEntityModel);
+            return View(companyModel);
         }
 
         public async Task<ActionResult> UpdateCompany()
@@ -47,8 +48,9 @@ namespace QuickbooksApi.Controllers
             };
             var requestBody = new StringContent(JsonConvert.SerializeObject(company), Encoding.UTF8, "application/json");
             var companyObj = await HandlePostRequest(requestBody, "companyinfo");
-            var companyInfo = _builder.GetCompanyModel(companyObj);
-            _repository.SaveCompanyDetails(companyInfo);
+            var companyModel = _builder.GetCompanyModel(companyObj);
+            CompanyInfo companyEntityModel = _entityBuilder.GetCompanyEntityModel(companyModel);
+            _repository.SaveCompanyDetails(companyEntityModel);
 
             return RedirectToAction("Index");
         }
