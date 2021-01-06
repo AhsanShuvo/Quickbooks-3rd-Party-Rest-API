@@ -5,7 +5,6 @@ namespace QuickbooksApi
 {
     public class Startup
     {
-
         public void Configuration(IAppBuilder app)
         {
             app.UseCookieAuthentication(new CookieAuthenticationOptions {

@@ -29,6 +29,7 @@ namespace QuickbooksApi.ApiService
                     else
                     {
                         Logger.WriteDebug("Api request failed. Status code: " + response.StatusCode + "");
+                        throw new HttpRequestException($"Response status does not indicate success: {(int)response.StatusCode} ({response.StatusCode}).");
                     }
                 }
             }
@@ -62,6 +63,7 @@ namespace QuickbooksApi.ApiService
                     else
                     {
                         Logger.WriteDebug("Api request failed. Status code: " + response.StatusCode + "");
+                        throw new HttpRequestException($"Response status does not indicate success: {(int)response.StatusCode} ({response.StatusCode}).");
                     }
                 }
             }

@@ -51,17 +51,15 @@ namespace QuickbooksApi.Controllers
             return View(customerModel);
         }
 
-        public async Task<ActionResult> UpdateCustomer()
+        public ActionResult UpdateCustomer()
         {
-            var customer = new CustomerInfo
-            {
-                CompanyName = "New Aviation 2",
-                DisplayName = "Mark",
-                SyncToken = "0",
-                Id = "2",
-            };
+            var model = _repository.GetCustomerInfo("2");
+            return View(model);
+        }
 
-            var requestBody = new StringContent(JsonConvert.SerializeObject(customer), Encoding.UTF8, "application/json");
+        public async Task<ActionResult> UpdateCustomer(CustomerInfo model)
+        {
+            var requestBody = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var customerObj = await HandlePostRequest(requestBody, EntityType.Customer.ToString().ToLower());
             var customerModel = _builder.GetCustomerModel(customerObj);
             var customerEntityModel = _entityBuilder.GetCustomerEntityModel(customerModel);

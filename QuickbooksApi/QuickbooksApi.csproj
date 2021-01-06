@@ -661,6 +661,8 @@
     <Content Include="Views\Payment\DownloadPayment.cshtml" />
     <Content Include="Views\Vendor\VendorDetails.cshtml" />
     <Content Include="Views\Employee\EmployeeDetails.cshtml" />
+    <Content Include="Views\Company\UpdateCompany.cshtml" />
+    <Content Include="Views\Customer\UpdateCustomer.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -42,10 +42,12 @@ namespace QuickbooksApi.Repository
             {
                 using (var ctx = new Entities())
                 {
-                    var employee = ctx.EmployeeInfoes.Find(id);
-                    ctx.EmployeeInfoes.Attach(employee);
-                    ctx.EmployeeInfoes.Remove(employee);
-                    ctx.SaveChanges();
+                    var employee = ctx.EmployeeInfoes.FirstOrDefault(x => x.Id == id);
+                    if (employee != null)
+                    {
+                        ctx.Entry(employee).State = EntityState.Deleted;
+                        ctx.SaveChanges();
+                    }
                 }
                 Logger.WriteDebug("Deleted employee info successfully");
             }

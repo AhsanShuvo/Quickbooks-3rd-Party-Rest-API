@@ -42,10 +42,12 @@ namespace QuickbooksApi.Repository
             {
                 using (var ctx = new Entities())
                 {
-                    var account = ctx.AccountInfoes.Find(id);
-                    ctx.AccountInfoes.Attach(account);
-                    ctx.AccountInfoes.Remove(account);
-                    ctx.SaveChanges();
+                    var account = ctx.AccountInfoes.FirstOrDefault(x => x.Id == id);
+                    if(account != null)
+                    {
+                        ctx.Entry(account).State = EntityState.Deleted;
+                        ctx.SaveChanges();
+                    }
                 }
                 Logger.WriteDebug("Deleted account successfully");
             }

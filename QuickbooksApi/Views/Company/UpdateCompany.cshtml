@@ -1,0 +1,19 @@
+﻿@model QuickbooksApi.CompanyInfo
+
+<div class="col-md-8 ml-5 align-content-center">
+    <h3 class="text-center">Update company info</h3>
+    @using (Html.BeginForm("UpdateCompany", "Company", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Company name")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor( m => m.CompanyName)
+            </div>
+        </div>
+        <div class="row">
+            <input type="submit" value="Submit" />
+        </div>
+    }
+</div>

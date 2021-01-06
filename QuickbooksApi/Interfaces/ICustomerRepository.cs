@@ -6,5 +6,7 @@ namespace QuickbooksApi.Interfaces
     {
         void SaveCustomerDetails(CustomerInfo model);
         void DeleteCustomer(string id);
+        CustomerInfo GetCustomerInfo(string id);
+        string GetSyncToken(string id);
     }
 }

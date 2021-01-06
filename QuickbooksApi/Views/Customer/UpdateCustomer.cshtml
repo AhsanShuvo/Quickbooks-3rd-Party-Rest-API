@@ -1,0 +1,21 @@
+﻿@model QuickbooksApi.CustomerInfo
+<div class="col-md-8 ml-5 align-content-center">
+    @using(Html.BeginForm("UpdateCustomer", "Customer", FormMethod.Post))
+    {
+        <div class="row">
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.SyncToken)
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Name")
+            </div>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.DisplayName)
+            </div>
+        </div>
+        <div class="row">
+            <input type="submit" value="Submit" />
+        </div>
+    }
+</div>

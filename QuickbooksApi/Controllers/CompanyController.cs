@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using QuickbooksApi.Helper;
 using QuickbooksApi.Interfaces;
+using QuickbooksApi.Models;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,15 +36,21 @@ namespace QuickbooksApi.Controllers
             return View(companyModel);
         }
 
-        public async Task<ActionResult> UpdateCompany()
+        public ActionResult UpdateCompany()
+        {
+            CompanyInfo company = _repository.GetCompanyInfo("1");
+            return View(company);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateCompany(CompanyInfo model)
         {
             Logger.WriteDebug("Updating company details.");
-            var company = new
+            var syncToken = _repository.GetSyncToken("1");
+            var company = new CompanyModel
             {
-                SyncToken = "16",
-                CompanyName = "Larry's Bakery",
-                sparse = true,
-                LegalName = "Larry Smith's Bakery",
+                SyncToken = syncToken,
+                CompanyName = model.CompanyName,
                 Id = "1"
             };
             var requestBody = new StringContent(JsonConvert.SerializeObject(company), Encoding.UTF8, "application/json");

@@ -25,6 +25,9 @@ namespace QuickbooksApi.Repository
                     {
                         ctx.Entry(model).State = EntityState.Added;
                     }
+                    var customer = ctx.CustomerInfoes.Find(model.CustomerRef);
+                    customer.Balance += model.TotalAmt;
+                    ctx.Entry(customer).State = EntityState.Modified;
                     ctx.SaveChanges();
                 }
                 Logger.WriteDebug("Saved payment info successfully.");
@@ -64,10 +67,12 @@ namespace QuickbooksApi.Repository
             {
                 using(var ctx = new Entities())
                 {
-                    var payment = ctx.PaymentInfoes.Find(id);
-                    ctx.PaymentInfoes.Attach(payment);
-                    ctx.PaymentInfoes.Remove(payment);
-                    ctx.SaveChanges();
+                    var payment = ctx.PaymentInfoes.SingleOrDefault(p => p.Id == id);
+                    if(payment != null)
+                    {
+                        ctx.Entry(payment).State = EntityState.Deleted;
+                        ctx.SaveChanges();
+                    }
                 }
             }
             catch(Exception e)

@@ -41,12 +41,14 @@ namespace QuickbooksApi.Repository
             {
                 using (var ctx = new Entities())
                 {
-                    var invoice = ctx.InvoiceInfoes.Find(id);
-                    ctx.InvoiceInfoes.Attach(invoice);
-                    ctx.InvoiceInfoes.Remove(invoice);
-                    ctx.SaveChanges();
+                    var invoice = ctx.InvoiceInfoes.FirstOrDefault(x => x.Id == id);
+                    if(invoice != null)
+                    {
+                        ctx.Entry(invoice).State = EntityState.Deleted;
+                        ctx.SaveChanges();
+                    }
                 }
-                Logger.WriteDebug("Deleted invoice successfully");
+                Logger.WriteDebug("Deleted invoice successfully.");
             }
             catch(Exception e)
             {

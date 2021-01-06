@@ -54,6 +54,7 @@ namespace QuickbooksApi.Controllers
         }
 
         //To do
+        // Full Update
         public async Task<ActionResult> UpdateAccount()
         {
             var account = new 

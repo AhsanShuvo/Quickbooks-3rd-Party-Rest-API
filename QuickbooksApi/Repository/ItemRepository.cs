@@ -42,16 +42,19 @@ namespace QuickbooksApi.Repository
             {
                 using (var ctx = new Entities())
                 {
-                    var item = ctx.ItemInfoes.Find(id);
-                    ctx.ItemInfoes.Attach(item);
-                    ctx.ItemInfoes.Remove(item);
-                    ctx.SaveChanges();
+                    var item = ctx.ItemInfoes.FirstOrDefault(x => x.Id == id);
+                    if(item != null)
+                    {
+                        ctx.Entry(item).State = EntityState.Deleted;
+                        ctx.SaveChanges();
+                    }
                 }
                 Logger.WriteDebug("Deleted item successfully.");
             }
             catch(Exception e)
             {
                 Logger.WriteError(e, "Failed to connect to the database to delete item.");
+                throw e;
             }
         }
 

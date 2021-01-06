@@ -31,6 +31,7 @@ namespace QuickbooksApi.Repository
             catch(Exception e)
             {
                 Logger.WriteError(e, "Failed to connect to the database.");
+                throw e;
             }
         }
 
@@ -41,17 +42,59 @@ namespace QuickbooksApi.Repository
             {
                 using(var ctx = new Entities())
                 {
-                    var customer = ctx.CustomerInfoes.Find(id);
-                    ctx.CustomerInfoes.Attach(customer);
-                    ctx.CustomerInfoes.Remove(customer);
-                    ctx.SaveChanges();
+                    var customer = ctx.CustomerInfoes.FirstOrDefault(x => x.Id == id);
+                    if(customer != null)
+                    {
+                        ctx.Entry(customer).State = EntityState.Deleted;
+                        ctx.SaveChanges();
+                    }
                 }
                 Logger.WriteDebug("Deleted customer info successfully.");
             }
             catch(Exception e)
             {
                 Logger.WriteError(e, "Failed to connect to database to delete customer info");
+                throw e;
             }
+        }
+
+        public CustomerInfo GetCustomerInfo(string id)
+        {
+            CustomerInfo customer = new CustomerInfo();
+            Logger.WriteDebug("Connecting to the database to fetch customer info.");
+            try
+            {
+                using(var ctx = new Entities())
+                {
+                    customer = ctx.CustomerInfoes.FirstOrDefault(x => x.Id == id);
+                }
+                Logger.WriteDebug("Fetched customer info successfully.");
+            }
+            catch(Exception e)
+            {
+                Logger.WriteError(e, "Failed to connect to the database to fetch customer info.");
+                throw e;
+            }
+            return customer;
+        }
+
+        public string GetSyncToken(string id)
+        {
+            string syncToken = string.Empty;
+            Logger.WriteDebug("Connecting to the database server to fetch sync token.");
+            try
+            {
+                using(var ctx = new Entities())
+                {
+                    syncToken = ctx.CustomerInfoes.FirstOrDefault(x => x.Id == id).SyncToken;
+                }
+            }
+            catch(Exception e)
+            {
+                Logger.WriteError(e, "Failed to connect to the database server to fetch sync token.");
+                throw e;
+            }
+            return syncToken;
         }
     }
 }

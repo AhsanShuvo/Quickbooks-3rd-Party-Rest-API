@@ -2,7 +2,6 @@
 using QuickbooksApi.Interfaces;
 using System;
 using System.Data.Entity;
-using System.Data.SqlClient;
 using System.Linq;
 
 namespace QuickbooksApi.Repository
@@ -43,10 +42,12 @@ namespace QuickbooksApi.Repository
             {
                 using(var ctx = new Entities())
                 {
-                    var vendor = ctx.VendorInfoes.Find(id);
-                    ctx.VendorInfoes.Attach(vendor);
-                    ctx.VendorInfoes.Remove(vendor);
-                    ctx.SaveChanges();
+                    var vendor = ctx.VendorInfoes.FirstOrDefault(v => v.Id == id);
+                    if(vendor != null)
+                    {
+                        ctx.Entry(vendor).State = EntityState.Deleted;
+                        ctx.SaveChanges();
+                    }
                 }
                 Logger.WriteDebug("Deleted vendor info successfully.");
             }
