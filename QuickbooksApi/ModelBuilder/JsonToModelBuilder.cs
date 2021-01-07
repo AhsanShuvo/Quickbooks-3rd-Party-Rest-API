@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using QuickbooksApi.Interfaces;
-using QuickbooksApi.Models;
+using QuickbooksWeb.Interfaces;
+using QuickbooksWeb.Models;
 
-namespace QuickbooksApi.ModelBuilder
+namespace QuickbooksWeb.ModelBuilder
 {
     public class JsonToModelBuilder : IJsonToModelBuilder
     {

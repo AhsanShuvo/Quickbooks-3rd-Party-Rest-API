@@ -1,4 +1,4 @@
-﻿@model QuickbooksApi.Models.EmployeeModel
+﻿@model QuickbooksWeb.Models.EmployeeModel
 
 <div class="col-md-8 ml-5 align-content-center">
     <h2>CreateEmployee</h2>
@@ -14,10 +14,10 @@
         </div>
         <div class="row">
             <div class="col-md-3">
-                @Html.Label("DisplayName")
+                @Html.Label("FamilyName")
             </div>
             <div class="col-md-5">
-                @Html.TextBoxFor(m => Model.DisplayName)
+                @Html.TextBoxFor(m => Model.FamilyName)
             </div>
         </div>
         <div class="row">

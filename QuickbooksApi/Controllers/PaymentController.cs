@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
-using QuickbooksApi.Helper;
-using QuickbooksApi.Interfaces;
-using QuickbooksApi.Models;
+﻿using QuickbooksAPI.Interfaces;
+using QuickbooksCommon.Logger;
+using QuickbooksDAL.Interfaces;
+using Newtonsoft.Json;
+using QuickbooksWeb.Interfaces;
+using QuickbooksWeb.Models;
 using System;
 using System.Configuration;
 using System.Net;
@@ -11,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace QuickbooksApi.Controllers
+namespace QuickbooksWeb.Controllers
 {
     public class PaymentController : BaseController
     {
@@ -55,7 +57,7 @@ namespace QuickbooksApi.Controllers
         public async Task<ActionResult> DeletePayment(string id)
         {
             Logger.WriteDebug("Deleting a payment.");
-            PaymentInfo paymentData = _repository.GetPaymentInfo(id);
+            var paymentData = _repository.GetPaymentInfo(id);
             PaymentModel payment = new PaymentModel()
             {
                 Id = id,

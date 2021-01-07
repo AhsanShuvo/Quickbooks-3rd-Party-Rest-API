@@ -16,7 +16,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace QuickbooksApi.DependencyResolution {
+namespace QuickbooksWeb.DependencyResolution {
     using StructureMap;
 	
     public static class IoC {

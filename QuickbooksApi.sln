@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickbooksApi", "QuickbooksApi\QuickbooksApi.csproj", "{6432AFC5-03E5-4CD1-BDB7-74FFFFCB0787}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quickbooks.DAL", "Quickbooks.DAL\Quickbooks.DAL.csproj", "{A845BA68-50C5-4B22-A100-C9A12491E345}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{1C099F73-9281-4F95-B385-344ED8B13895}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quickbooks.Common", "Quickbooks.Common\Quickbooks.Common.csproj", "{D1184DA8-25B9-4DB6-A0C6-9CB238BC93D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quickbooks.API", "Quickbooks.API\Quickbooks.API.csproj", "{BFE101EF-77E2-436F-844B-6D3970534630}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quickbooks.Web", "QuickbooksApi\Quickbooks.Web.csproj", "{6432AFC5-03E5-4CD1-BDB7-74FFFFCB0787}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +17,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A845BA68-50C5-4B22-A100-C9A12491E345}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A845BA68-50C5-4B22-A100-C9A12491E345}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A845BA68-50C5-4B22-A100-C9A12491E345}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A845BA68-50C5-4B22-A100-C9A12491E345}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1184DA8-25B9-4DB6-A0C6-9CB238BC93D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1184DA8-25B9-4DB6-A0C6-9CB238BC93D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1184DA8-25B9-4DB6-A0C6-9CB238BC93D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1184DA8-25B9-4DB6-A0C6-9CB238BC93D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFE101EF-77E2-436F-844B-6D3970534630}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFE101EF-77E2-436F-844B-6D3970534630}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFE101EF-77E2-436F-844B-6D3970534630}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFE101EF-77E2-436F-844B-6D3970534630}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6432AFC5-03E5-4CD1-BDB7-74FFFFCB0787}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6432AFC5-03E5-4CD1-BDB7-74FFFFCB0787}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6432AFC5-03E5-4CD1-BDB7-74FFFFCB0787}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6432AFC5-03E5-4CD1-BDB7-74FFFFCB0787}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1C099F73-9281-4F95-B385-344ED8B13895}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C099F73-9281-4F95-B385-344ED8B13895}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1C099F73-9281-4F95-B385-344ED8B13895}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C099F73-9281-4F95-B385-344ED8B13895}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

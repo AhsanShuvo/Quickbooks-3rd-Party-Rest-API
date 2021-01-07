@@ -15,7 +15,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace QuickbooksApi.DependencyResolution {
+namespace QuickbooksWeb.DependencyResolution {
     using System;
     using System.Web.Mvc;
 

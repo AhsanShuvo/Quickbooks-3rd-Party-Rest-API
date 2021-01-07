@@ -1,6 +1,7 @@
-﻿using QuickbooksApi.Models;
+﻿using QuickbooksDAL;
+using QuickbooksWeb.Models;
 
-namespace QuickbooksApi.Interfaces
+namespace QuickbooksWeb.Interfaces
 {
     public interface IApiModelToEntityModelBuilder
     {

@@ -2,7 +2,7 @@
 using System.Web.Optimization;
 using System.Web.Routing;
 
-namespace QuickbooksApi
+namespace QuickbooksWeb
 {
     public class MvcApplication : System.Web.HttpApplication
     {

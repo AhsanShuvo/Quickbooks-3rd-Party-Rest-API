@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
-using QuickbooksApi.Helper;
-using QuickbooksApi.Interfaces;
-using QuickbooksApi.Models;
+﻿using QuickbooksAPI.Interfaces;
+using QuickbooksCommon.Logger;
+using QuickbooksDAL.Interfaces;
+using Newtonsoft.Json;
+using QuickbooksWeb.Interfaces;
+using QuickbooksWeb.Models;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace QuickbooksApi.Controllers
+namespace QuickbooksWeb.Controllers
 {
     public class VendorController : BaseController
     {

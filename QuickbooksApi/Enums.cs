@@ -1,4 +1,4 @@
-﻿namespace QuickbooksApi
+﻿namespace QuickbooksWeb
 {
     public enum ActiveStatus
     {

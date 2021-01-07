@@ -1,7 +1,7 @@
-namespace QuickbooksApi.DependencyResolution {
+namespace QuickbooksWeb.DependencyResolution {
     using System.Web;
 
-    using QuickbooksApi.App_Start;
+    using QuickbooksWeb.App_Start;
 
     using StructureMap.Web.Pipeline;
 

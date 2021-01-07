@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace QuickbooksApi
+namespace QuickbooksWeb
 {
     public class FilterConfig
     {

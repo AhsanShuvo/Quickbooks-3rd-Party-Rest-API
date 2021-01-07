@@ -1,12 +1,12 @@
-﻿using Intuit.Ipp.OAuth2PlatformClient;
-using QuickbooksApi.Helper;
+﻿using QuickbooksCommon.Logger;
+using Intuit.Ipp.OAuth2PlatformClient;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
-namespace QuickbooksApi.Controllers
+namespace QuickbooksWeb.Controllers
 {
     public class AppController : Controller
     {

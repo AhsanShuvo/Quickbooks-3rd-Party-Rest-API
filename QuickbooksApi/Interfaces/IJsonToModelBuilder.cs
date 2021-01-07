@@ -1,6 +1,6 @@
-﻿using QuickbooksApi.Models;
+﻿using QuickbooksWeb.Models;
 
-namespace QuickbooksApi.Interfaces
+namespace QuickbooksWeb.Interfaces
 {
     public interface IJsonToModelBuilder
     {

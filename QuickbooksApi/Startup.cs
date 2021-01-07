@@ -1,7 +1,7 @@
 ﻿using Microsoft.Owin.Security.Cookies;
 using Owin;
 
-namespace QuickbooksApi
+namespace QuickbooksWeb
 {
     public class Startup
     {

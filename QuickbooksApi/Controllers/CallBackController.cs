@@ -1,5 +1,6 @@
-﻿using QuickbooksApi.Helper;
-using QuickbooksApi.Interfaces;
+﻿using QuickbooksCommon.Logger;
+using QuickbooksDAL;
+using QuickbooksDAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
-namespace QuickbooksApi.Controllers
+namespace QuickbooksWeb.Controllers
 {
     public class CallBackController : Controller
     {

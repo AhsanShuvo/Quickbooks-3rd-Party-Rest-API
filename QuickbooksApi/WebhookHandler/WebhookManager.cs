@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
-using QuickbooksApi.Interfaces;
-using QuickbooksApi.ModelBuilder;
-using QuickbooksApi.Models;
+﻿using QuickbooksAPI.Interfaces;
+using QuickbooksDAL.Interfaces;
+using Newtonsoft.Json;
+using QuickbooksWeb.Interfaces;
+using QuickbooksWeb.Models;
 using System;
 using System.Configuration;
 using System.IO;
@@ -10,7 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QuickbooksApi.Webhookhandler 
+namespace QuickbooksWeb.Webhookhandler 
 {
     public class WebhookManager : IWebhookManager
     {
@@ -100,7 +101,7 @@ namespace QuickbooksApi.Webhookhandler
 
         private async Task ProcessEvent(string realmId, Entity model)
         {
-            UserInfo user = _user.GetUserInfo(realmId);
+            var user = _user.GetUserInfo(realmId);
             var id = WebUtility.UrlEncode(model.Id);
             var entityType = WebUtility.UrlEncode(model.Name.ToLower());
             string uri = string.Format("{0}/v3/company/{1}/{2}/{3}?minorversion=55", _qboBaseUrl, realmId,entityType, id);

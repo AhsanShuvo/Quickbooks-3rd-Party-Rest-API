@@ -1,11 +1,12 @@
-﻿using QuickbooksApi.Interfaces;
+﻿using QuickbooksAPI.Interfaces;
+using QuickbooksWeb.Interfaces;
 using System.Configuration;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace QuickbooksApi.Controllers
+namespace QuickbooksWeb.Controllers
 {
     public class BaseController : Controller
     {

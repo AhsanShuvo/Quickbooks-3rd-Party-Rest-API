@@ -1,4 +1,4 @@
-﻿namespace QuickbooksApi.Models
+﻿namespace QuickbooksWeb.Models
 {
     public class CustomerReference : BaseRefModel
     {

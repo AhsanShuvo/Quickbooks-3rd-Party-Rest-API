@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace QuickbooksApi.Interfaces
+namespace QuickbooksWeb.Interfaces
 {
     public interface IWebhookManager
     {

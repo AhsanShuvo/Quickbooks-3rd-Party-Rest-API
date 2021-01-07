@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
-using QuickbooksApi.Helper;
-using QuickbooksApi.Interfaces;
-using QuickbooksApi.Models;
+﻿using QuickbooksAPI.Interfaces;
+using QuickbooksCommon.Logger;
+using Newtonsoft.Json;
+using QuickbooksWeb.Interfaces;
+using QuickbooksWeb.Models;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using QuickbooksDAL.Interfaces;
 
-namespace QuickbooksApi.Controllers
+namespace QuickbooksWeb.Controllers
 {
     public class AccountController : BaseController
     {
@@ -37,7 +39,7 @@ namespace QuickbooksApi.Controllers
             var requestBody = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var acctInfo = await HandlePostRequest(requestBody, EntityType.Account.ToString().ToLower());
             AccountModel accountModel = _builder.GetAccountModel(acctInfo);
-            AccountInfo accountEntityModel = _entityBuilder.GetAccountEntityModel(accountModel);
+            var accountEntityModel = _entityBuilder.GetAccountEntityModel(accountModel);
             _repository.SaveAccountInfo(accountEntityModel);
 
             return RedirectToAction("Index");
@@ -48,7 +50,7 @@ namespace QuickbooksApi.Controllers
             Logger.WriteDebug("Showing account details.");
             var acctInfo = await HandleGetRequest("93", EntityType.Account.ToString().ToLower());
             AccountModel accountModel = _builder.GetAccountModel(acctInfo);
-            AccountInfo accountEntityModel = _entityBuilder.GetAccountEntityModel(accountModel);
+            var accountEntityModel = _entityBuilder.GetAccountEntityModel(accountModel);
             _repository.SaveAccountInfo(accountEntityModel);
             return View(accountModel);
         }

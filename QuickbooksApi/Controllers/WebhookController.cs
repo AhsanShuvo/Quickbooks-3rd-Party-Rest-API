@@ -1,10 +1,10 @@
-﻿using QuickbooksApi.Interfaces;
+﻿using QuickbooksWeb.Interfaces;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace QuickbooksApi.Controllers
+namespace QuickbooksWeb.Controllers
 {
     public class WebhookController : Controller
     {

@@ -15,7 +15,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace QuickbooksApi.DependencyResolution {
+namespace QuickbooksWeb.DependencyResolution {
     using StructureMap.Configuration.DSL;
     using StructureMap.Graph;
 	
@@ -25,6 +25,8 @@ namespace QuickbooksApi.DependencyResolution {
         public DefaultRegistry() {
             Scan(
                 scan => {
+                    scan.Assembly("Quickbooks.DAL");
+                    scan.Assembly("Quickbooks.API");
                     scan.TheCallingAssembly();
                     scan.WithDefaultConventions();
 					scan.With(new ControllerConvention());

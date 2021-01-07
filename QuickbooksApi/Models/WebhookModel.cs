@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 
-namespace QuickbooksApi.Models
+namespace QuickbooksWeb.Models
 {
     public class WebhookModel
     {

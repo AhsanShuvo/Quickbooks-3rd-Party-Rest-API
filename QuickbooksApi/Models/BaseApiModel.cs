@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace QuickbooksApi.Models
+namespace QuickbooksWeb.Models
 {
     public class BaseApiModel
     {

@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace QuickbooksApi.Controllers
+namespace QuickbooksWeb.Controllers
 {
     public class HomeController : Controller
     {

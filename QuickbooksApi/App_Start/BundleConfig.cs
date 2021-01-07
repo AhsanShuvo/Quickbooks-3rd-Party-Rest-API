@@ -1,6 +1,6 @@
 ﻿using System.Web.Optimization;
 
-namespace QuickbooksApi
+namespace QuickbooksWeb
 {
     public class BundleConfig
     {

@@ -1,13 +1,16 @@
-﻿using Newtonsoft.Json;
-using QuickbooksApi.Helper;
-using QuickbooksApi.Interfaces;
-using QuickbooksApi.Models;
+﻿using QuickbooksAPI.Interfaces;
+using QuickbooksCommon.Logger;
+using QuickbooksDAL;
+using QuickbooksDAL.Interfaces;
+using Newtonsoft.Json;
+using QuickbooksWeb.Interfaces;
+using QuickbooksWeb.Models;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace QuickbooksApi.Controllers
+namespace QuickbooksWeb.Controllers
 {
     public class CompanyController : BaseController
     {
@@ -31,14 +34,14 @@ namespace QuickbooksApi.Controllers
             var realmId = Session["realmId"].ToString();
             var companyObject = await HandleGetRequest(realmId, "companyinfo");
             var companyModel = _builder.GetCompanyModel(companyObject);
-            CompanyInfo companyEntityModel = _entityBuilder.GetCompanyEntityModel(companyModel);
+            var companyEntityModel = _entityBuilder.GetCompanyEntityModel(companyModel);
             _repository.SaveCompanyDetails(companyEntityModel);
             return View(companyModel);
         }
 
         public ActionResult UpdateCompany()
         {
-            CompanyInfo company = _repository.GetCompanyInfo("1");
+            var company = _repository.GetCompanyInfo("1");
             return View(company);
         }
 
@@ -56,7 +59,7 @@ namespace QuickbooksApi.Controllers
             var requestBody = new StringContent(JsonConvert.SerializeObject(company), Encoding.UTF8, "application/json");
             var companyObj = await HandlePostRequest(requestBody, "companyinfo");
             var companyModel = _builder.GetCompanyModel(companyObj);
-            CompanyInfo companyEntityModel = _entityBuilder.GetCompanyEntityModel(companyModel);
+            var companyEntityModel = _entityBuilder.GetCompanyEntityModel(companyModel);
             _repository.SaveCompanyDetails(companyEntityModel);
 
             return RedirectToAction("Index");

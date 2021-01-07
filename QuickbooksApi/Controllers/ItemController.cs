@@ -1,13 +1,15 @@
-﻿using Newtonsoft.Json;
-using QuickbooksApi.Helper;
-using QuickbooksApi.Interfaces;
-using QuickbooksApi.Models;
+﻿using QuickbooksAPI.Interfaces;
+using QuickbooksCommon.Logger;
+using QuickbooksDAL.Interfaces;
+using Newtonsoft.Json;
+using QuickbooksWeb.Interfaces;
+using QuickbooksWeb.Models;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace QuickbooksApi.Controllers
+namespace QuickbooksWeb.Controllers
 {
     public class ItemController : BaseController
     {
@@ -72,7 +74,7 @@ namespace QuickbooksApi.Controllers
             var requestBody = new StringContent(JsonConvert.SerializeObject(category), Encoding.UTF8, "application/json");
             var categoryObj = await HandlePostRequest(requestBody, EntityType.Item.ToString().ToLower(), "4");
             ItemModel categoryModel = _builder.GetItemModel(categoryObj);
-            ItemInfo categoryEntityModel = _entityBuilder.GetCategoryEntityModel(categoryModel);
+            var categoryEntityModel = _entityBuilder.GetCategoryEntityModel(categoryModel);
             _repository.SaveCategoryInfo(categoryEntityModel);
             return RedirectToAction("Index");
         }

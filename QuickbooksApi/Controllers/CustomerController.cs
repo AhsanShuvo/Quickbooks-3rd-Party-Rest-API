@@ -1,13 +1,16 @@
-﻿using Newtonsoft.Json;
-using QuickbooksApi.Helper;
-using QuickbooksApi.Interfaces;
-using QuickbooksApi.Models;
+﻿using QuickbooksAPI.Interfaces;
+using QuickbooksCommon.Logger;
+using QuickbooksDAL;
+using QuickbooksDAL.Interfaces;
+using Newtonsoft.Json;
+using QuickbooksWeb.Interfaces;
+using QuickbooksWeb.Models;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace QuickbooksApi.Controllers
+namespace QuickbooksWeb.Controllers
 {
     public class CustomerController : BaseController
     {
@@ -39,7 +42,7 @@ namespace QuickbooksApi.Controllers
             CustomerModel customerModel = _builder.GetCustomerModel(customerObject);
             CustomerInfo customerEntityModel = _entityBuilder.GetCustomerEntityModel(customerModel);
             _repository.SaveCustomerDetails(customerEntityModel);
-            return RedirectToRoute("Index");
+            return RedirectToAction("Index");
         }
 
         public async Task<ActionResult> CustomerDetails()

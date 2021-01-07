@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="fa72f7eb6b6c40cf9f402313c2aa607e" Name="Diagram1">
+        <EntityTypeShape EntityType="QuickbooksModel.AccountInfo" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="QuickbooksModel.BillInfo" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="QuickbooksModel.CategoryInfo" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="QuickbooksModel.CompanyInfo" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="QuickbooksModel.CustomerInfo" Width="1.5" PointX="2.75" PointY="4.75" />
+        <EntityTypeShape EntityType="QuickbooksModel.EmployeeInfo" Width="1.5" PointX="4.75" PointY="3.75" />
+        <EntityTypeShape EntityType="QuickbooksModel.InvoiceInfo" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="QuickbooksModel.ItemInfo" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="QuickbooksModel.PaymentInfo" Width="1.5" PointX="0.75" PointY="7.75" />
+        <EntityTypeShape EntityType="QuickbooksModel.UserInfo" Width="1.5" PointX="2.75" PointY="7.75" />
+        <EntityTypeShape EntityType="QuickbooksModel.VendorInfo" Width="1.5" PointX="4.75" PointY="7.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
