@@ -27,6 +27,7 @@ namespace QuickbooksWeb.DependencyResolution {
                 scan => {
                     scan.Assembly("Quickbooks.DAL");
                     scan.Assembly("Quickbooks.API");
+                    scan.Assembly("Quickbooks.Report");
                     scan.TheCallingAssembly();
                     scan.WithDefaultConventions();
 					scan.With(new ControllerConvention());

@@ -584,6 +584,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Reports\" />
     <Folder Include="Views\Base\" />
     <Folder Include="Views\Report\" />
     <Folder Include="Views\Webhook\" />
@@ -607,6 +608,10 @@
     <ProjectReference Include="..\Quickbooks.DAL\Quickbooks.DAL.csproj">
       <Project>{a845ba68-50c5-4b22-a100-c9a12491e345}</Project>
       <Name>Quickbooks.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Quickbooks.Report\Quickbooks.Report.csproj">
+      <Project>{cb32cb59-b4b4-4220-b1bc-952b45b6fb51}</Project>
+      <Name>Quickbooks.Report</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
