@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,8 +44,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\ICustomerBalanceReportProvider.cs" />
+    <Compile Include="Models\CustomerBalance.cs" />
+    <Compile Include="Models\QuickbooksReport.cs" />
+    <Compile Include="Models\ReportColumn.cs" />
+    <Compile Include="Models\ReportHeader.cs" />
+    <Compile Include="Models\ReportRow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportProvider\BaseProvider.cs" />
+    <Compile Include="ReportProvider\CustomerBalanceReportProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quickbooks.API\Quickbooks.API.csproj">
@@ -59,11 +69,26 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Properties\DataSources\Quickbooks.Report.Interfaces.ICustomerBalanceReportProvider.datasource" />
+    <None Include="Properties\DataSources\Quickbooks.Report.Models.ColData.datasource" />
+    <None Include="Properties\DataSources\Quickbooks.Report.Models.Column.datasource" />
+    <None Include="Properties\DataSources\Quickbooks.Report.Models.Columns.datasource" />
+    <None Include="Properties\DataSources\Quickbooks.Report.Models.CustomerBalance.datasource" />
+    <None Include="Properties\DataSources\Quickbooks.Report.Models.Option.datasource" />
+    <None Include="Properties\DataSources\Quickbooks.Report.Models.QuickbooksReport.datasource" />
+    <None Include="Properties\DataSources\Quickbooks.Report.Models.ReportHeader.datasource" />
+    <None Include="Properties\DataSources\Quickbooks.Report.Models.ReportRow.datasource" />
+    <None Include="Properties\DataSources\Quickbooks.Report.Models.ReportSummary.datasource" />
+    <None Include="Properties\DataSources\Quickbooks.Report.Models.Row.datasource" />
     <None Include="Properties\DataSources\Quickbooks.Report.ReportProvider.BaseProvider.datasource" />
+    <None Include="Properties\DataSources\Quickbooks.Report.ReportProvider.CustomerBalanceReportProvider.datasource" />
     <None Include="Properties\DataSources\Quickbooks.Report.ReportProvider.Employee.datasource" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Reports\EmployeeReport.rdlc" />
+    <Content Include="Reports\CustomerBalance.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

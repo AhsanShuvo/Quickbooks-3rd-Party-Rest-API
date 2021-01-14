@@ -1,71 +1,22 @@
-﻿using QuickbooksDAL;
-using QuickbooksDAL.Interfaces;
-using System.Collections.Generic;
+﻿using QuickbooksAPI.Interfaces;
+using System.Threading.Tasks;
 
 namespace Quickbooks.Report.ReportProvider
 {
-    public class Employee
-    {
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public int Age { get; set; }
-    }
-
     public class BaseProvider
     {
-        private readonly IUserRepository _user;
-        private static List<Employee> _lstEmployee = null;
+        protected IApiDataProvider _provider;
 
-        public BaseProvider(IUserRepository user)
+        public BaseProvider(IApiDataProvider provider)
         {
-            _user = user;
+            _provider = provider;
         }
 
-        protected UserInfo GetUserInfo()
+        protected async Task<string> HandleRequest(string baseUrl, string entityType, string realmId, string id, string accessToken)
         {
-            var realmId = GetRealmId();
-            var userInfo = _user.GetUserInfo(realmId);
-            return userInfo;
-        }
-
-        public static List<Employee> GetAllEmployees()
-        {
-            if (_lstEmployee == null)
-            {
-                _lstEmployee = new List<Employee>();
-                _lstEmployee.Add(new Employee()
-                {
-                    ID = 1,
-                    Name = "Alok",
-                    Age = 30
-                });
-
-                _lstEmployee.Add(new Employee()
-                {
-                    ID = 2,
-                    Name = "Ashish",
-                    Age = 30
-                });
-
-                _lstEmployee.Add(new Employee()
-                {
-                    ID = 3,
-                    Name = "Jasdeep",
-                    Age = 30
-                });
-
-                _lstEmployee.Add(new Employee()
-                {
-                    ID = 4,
-                    Name = "Kamlesh",
-                    Age = 31
-                });
-            }
-            return _lstEmployee;
-        }
-        private string GetRealmId()
-        {
-            return "4620816365155280670";
+            string uri = string.Format("{0}/v3/company/{1}/reports/{2}?customer={3}&minorversion=55", baseUrl, realmId, entityType, id);
+            var result = await _provider.Get(uri, accessToken);
+            return result;
         }
     }
 }
